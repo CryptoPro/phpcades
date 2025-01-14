@@ -2,7 +2,7 @@
 #include "PHPCadesCPAlgorithm.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//Методы
+//пїЅпїЅпїЅпїЅпїЅпїЅ
 PHP_METHOD(CPAlgorithm, __construct) {
     CPPCadesCPAlgorithmObject *algo;
 
@@ -60,7 +60,7 @@ PHP_METHOD(CPAlgorithm, set_KeyLength) {
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_KeyLength(Len));
 }
 
-//Вспомагательные функции обертки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 zend_object_handlers algo_obj_handlers;
 zend_class_entry *algo_ce;
 
@@ -99,7 +99,7 @@ zend_object_value algo_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry algo_methods[] = {
     PHP_ME(CPAlgorithm, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPAlgorithm, get_Name, NULL, ZEND_ACC_PUBLIC)

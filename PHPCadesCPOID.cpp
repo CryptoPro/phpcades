@@ -5,11 +5,11 @@ using namespace CryptoPro::PKI::CAdES;
 PHP_METHOD(CPOID, __construct) {
     oid_obj *obj = (oid_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
     obj->m_pCppCadesImpl =
-        boost::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
+        NS_SHARED_PTR::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
 }
 
 PHP_METHOD(CPOID, get_Value) {
-    boost::shared_ptr<CAtlStringA> atl;
+    NS_SHARED_PTR::shared_ptr<CAtlStringA> atl;
 
     oid_obj *obj = (oid_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
@@ -79,7 +79,7 @@ zend_object_value oid_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry oid_methods[] = {
     PHP_ME(CPOID, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPOID, get_Value, NULL, ZEND_ACC_PUBLIC)

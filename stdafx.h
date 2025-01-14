@@ -8,6 +8,7 @@
 #define CMSG_SIGNER_ENCODE_INFO_HAS_CMS_FIELDS
 #define CMSG_SIGNED_ENCODE_INFO_HAS_CMS_FIELDS
 #define CERT_PARA_HAS_EXTRA_FIELDS
+#define IGNORE_LEGACY_FORMAT_MESSAGE_MSG
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
@@ -17,8 +18,8 @@
 #endif
 
 #include <iostream>
-#include <memory> //Этот хедер тут нужен что бы компилить с новыми версиями libstdc++
-                  //в них есть конфликт с __in и __out макросами которые определены в MS хедерах.
+#include <memory> //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ libstdc++
+                  //пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ __in пїЅ __out пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ MS пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 
 #ifdef UNIX
     #include "CSP_WinDef.h"
@@ -39,6 +40,10 @@
 #include <atldef2.h>
 #include <atlenc.h>
 #include <atlcrypt2.h>
+
+#ifndef NS_SHARED_PTR
+#define NS_SHARED_PTR boost
+#endif
 
 #define _ATL_APARTMENT_THREADED
 // some CString constructors will be explicit
@@ -136,7 +141,7 @@
     RETURN_STRING(str, 0)\
     }
 
-#ifdef UNIX //разные макросы ибо на линуксе нет  _vscwprintf() который нужен внутри AppendFormat().
+#ifdef UNIX //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ  _vscwprintf() пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ AppendFormat().
 
 #ifdef MAKELANGID
     #undef MAKELANGID

@@ -20,7 +20,7 @@ PHP_METHOD(CPSigners, get_Item) {
         FAILURE)
         RETURN_WITH_EXCEPTION(E_INVALIDARG);
 
-    boost::shared_ptr<CPPCadesCPSignerObject> pVal;
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPSignerObject> pVal;
 
     signers_obj *obj =
         (signers_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);

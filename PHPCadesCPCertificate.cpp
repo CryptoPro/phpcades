@@ -9,11 +9,11 @@
 #include "PHPCadesCPCertificateStatus.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//Методы
+//пїЅпїЅпїЅпїЅпїЅпїЅ
 PHP_METHOD(CPCertificate, __construct) {
     cert_obj *obj =
         (cert_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    boost::shared_ptr<CPPCadesCPCertificateObject> cert(
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> cert(
         new CPPCadesCPCertificateObject());
     obj->m_pCppCadesImpl = cert;
 }
@@ -65,7 +65,7 @@ PHP_METHOD(CPCertificate, HasPrivateKey) {
 }
 
 PHP_METHOD(CPCertificate, IsValid) {
-    boost::shared_ptr<CPPCadesCPCertificateStatusObject> stat(
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateStatusObject> stat(
         new CPPCadesCPCertificateStatusObject());
 
     cert_obj *obj =
@@ -125,7 +125,7 @@ PHP_METHOD(CPCertificate, Export) {
     str = (char *)ecalloc(len, sizeof(char));
     memcpy(str, value.pbData(), len);
 
-    RETURN_STRINGL(str, len - 2 , 0); //удаляем перевод строки иначе php будет мусор оставлять в переменных
+    RETURN_STRINGL(str, len - 2 , 0); //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ php пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 }
 
 PHP_METHOD(CPCertificate, Import) {
@@ -256,7 +256,7 @@ PHP_METHOD(CPCertificate, BasicConstraints) {
         obj->m_pCppCadesImpl->BasicConstraints(bcobj->m_pCppCadesImpl));
 }
 
-//Вспомогательные функции обертки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 zend_object_handlers cert_obj_handlers;
 zend_class_entry *cert_ce;
 
@@ -295,7 +295,7 @@ zend_object_value cert_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry cert_methods[] = {
     PHP_ME(CPCertificate, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPCertificate, GetInfo, NULL, ZEND_ACC_PUBLIC)

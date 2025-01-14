@@ -5,7 +5,7 @@ using namespace CryptoPro::PKI::CAdES;
 PHP_METHOD(CPBasicConstraints, __construct) {
     basic_constr_obj *obj =
         (basic_constr_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPBasicConstraintsObject>(
+    obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPBasicConstraintsObject>(
         new CPPCadesCPBasicConstraintsObject());
 }
 
@@ -88,7 +88,7 @@ PHP_METHOD(CPBasicConstraints, get_PathLenConstraint) {
     RETURN_LONG(plc)
 }
 
-//Вспомогательные функции обертки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 zend_object_handlers basic_constr_obj_handlers;
 zend_class_entry *basic_constr_ce;
 
@@ -129,7 +129,7 @@ zend_object_value basic_constr_create_handler(zend_class_entry *type
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry basic_constr_methods[] = {
     PHP_ME(CPBasicConstraints, __construct, NULL,
            ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)

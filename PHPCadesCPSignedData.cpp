@@ -398,7 +398,7 @@ PHP_METHOD(CPSignedData, get_Signers) {
 }
 
 PHP_METHOD(CPSignedData, get_Certificates) {
-    boost::shared_ptr<CPPCadesCPCertificatesObject> pVal;
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificatesObject> pVal;
 
     sig_dat_obj *obj =
         (sig_dat_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);

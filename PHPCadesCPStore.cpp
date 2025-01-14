@@ -10,7 +10,7 @@ PHP_METHOD(CPStore, __construct) {
     store_obj *obj =
         (store_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
     obj->m_pCppCadesImpl =
-        boost::shared_ptr<CPPCadesCPStoreObject>(new CPPCadesCPStoreObject());
+        NS_SHARED_PTR::shared_ptr<CPPCadesCPStoreObject>(new CPPCadesCPStoreObject());
 }
 
 PHP_METHOD(CPStore, Open) {
@@ -115,7 +115,7 @@ zend_object_value store_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry store_methods[] = {
     PHP_ME(CPStore, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPStore, Open, NULL, ZEND_ACC_PUBLIC)

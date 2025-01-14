@@ -9,7 +9,7 @@ PHP_METHOD(SymmetricAlgorithm, __construct) {
     symmetric_algorithm_obj *obj =
         (symmetric_algorithm_obj *)zend_object_store_get_object(getThis()
                                                                 TSRMLS_CC);
-    obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesSymmetricAlgorithmObject>(
+    obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesSymmetricAlgorithmObject>(
         new CPPCadesSymmetricAlgorithmObject());
 }
 
@@ -111,7 +111,7 @@ PHP_METHOD(SymmetricAlgorithm, Decrypt) {
 }
 
 PHP_METHOD(SymmetricAlgorithm, DiversifyKey) {
-    boost::shared_ptr<CPPCadesSymmetricAlgorithmObject> pVal;
+    NS_SHARED_PTR::shared_ptr<CPPCadesSymmetricAlgorithmObject> pVal;
 
     symmetric_algorithm_obj *obj =
         (symmetric_algorithm_obj *)zend_object_store_get_object(getThis()
@@ -227,7 +227,7 @@ zend_object_value symmetric_algorithm_create_handler(zend_class_entry *type
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry symmetric_algorithm_methods[] = {
     PHP_ME(SymmetricAlgorithm, __construct, NULL,
            ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)

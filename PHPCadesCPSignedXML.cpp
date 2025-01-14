@@ -7,7 +7,7 @@ using namespace CryptoPro::PKI::CAdES;
 PHP_METHOD(CPSignedXML, __construct) {
     sig_xml_obj *obj =
         (sig_xml_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesSignedXMLObject>(
+    obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesSignedXMLObject>(
         new CPPCadesSignedXMLObject());
 }
 
@@ -169,7 +169,7 @@ zend_object_value sig_xml_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry sig_xml_methods[] = {
     PHP_ME(CPSignedXML, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPSignedXML, set_Content, NULL, ZEND_ACC_PUBLIC)

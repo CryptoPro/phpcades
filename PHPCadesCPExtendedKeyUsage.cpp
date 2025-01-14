@@ -8,7 +8,7 @@ PHP_METHOD(CPExtendedKeyUsage, __construct) {
 
     exku_obj *obj =
         (exku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPExtendedKeyUsageObject>(
+    obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPExtendedKeyUsageObject>(
         new CPPCadesCPExtendedKeyUsageObject());
 }
 
@@ -35,7 +35,7 @@ PHP_METHOD(CPExtendedKeyUsage, get_IsCritical) {
 PHP_METHOD(CPExtendedKeyUsage, get_EKUs) {
     exku_obj *obj =
         (exku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    boost::shared_ptr<CPPCadesCPEKUsObject> ptr(new CPPCadesCPEKUsObject());
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPEKUsObject> ptr(new CPPCadesCPEKUsObject());
 
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_EKUs(ptr));
 
@@ -85,7 +85,7 @@ zend_object_value exku_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry exku_methods[] = {
     PHP_ME(CPExtendedKeyUsage, __construct, NULL,
            ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)

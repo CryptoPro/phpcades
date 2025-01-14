@@ -5,7 +5,7 @@ using namespace CryptoPro::PKI::CAdES;
 PHP_METHOD(CPEncodedData, __construct) {
     encoded_data_obj *obj =
         (encoded_data_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPEncodedDataObject>(
+    obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPEncodedDataObject>(
         new CPPCadesCPEncodedDataObject());
 }
 
@@ -92,7 +92,7 @@ zend_object_value encoded_data_create_handler(zend_class_entry *type
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry encoded_data_methods[] = {
     PHP_ME(CPEncodedData, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPEncodedData, Format, NULL, ZEND_ACC_PUBLIC)

@@ -9,7 +9,7 @@ PHP_METHOD(Version, __construct) {
     version_obj *obj =
         (version_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
     obj->m_pCppCadesImpl =
-        boost::shared_ptr<CPPVersionObject>(new CPPVersionObject());
+        NS_SHARED_PTR::shared_ptr<CPPVersionObject>(new CPPVersionObject());
 }
 
 PHP_METHOD(Version, get_MajorVersion) {

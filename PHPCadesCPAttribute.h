@@ -3,11 +3,11 @@
 
 #include "CPPCadesCPAttribute.h"
 
-//объявление структуры, которая свяжет объект оборачиваемого класса
-//с объектом php
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+//пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 struct attr_obj {
     zend_object zo;
-    boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPAttributeObject>
+    NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPAttributeObject>
         m_pCppCadesImpl;
 };
 
@@ -16,8 +16,8 @@ extern zend_class_entry *attr_ce;
 
 void attr_free_storage(void *object TSRMLS_DC);
 zend_object_value attr_create_handler(zend_class_entry *type TSRMLS_DC);
-//функция инициализации класса. должна включаться в
-//функцию, инициализации модуля
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 void attr_init(TSRMLS_D);
 
 #endif

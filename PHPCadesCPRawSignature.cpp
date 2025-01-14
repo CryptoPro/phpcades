@@ -7,7 +7,7 @@ using namespace CryptoPro::PKI::CAdES;
 PHP_METHOD(CPRawSignature, __construct) {
     raw_sig_obj *obj =
         (raw_sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesRawSignatureObject>(
+    obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesRawSignatureObject>(
         new CPPCadesRawSignatureObject());
 }
 

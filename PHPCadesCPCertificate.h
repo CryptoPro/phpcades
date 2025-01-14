@@ -3,11 +3,11 @@
 
 #include "CPPCadesCPCertificate.h"
 
-//объявление структуры, которая свяжет объект оборачиваемого класса
-//с объектом php
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+//пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 struct cert_obj {
     zend_object zo;
-    boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPCertificateObject>
+    NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPCertificateObject>
         m_pCppCadesImpl;
 };
 
@@ -16,7 +16,7 @@ extern zend_class_entry *cert_ce;
 
 void cert_free_storage(void *object TSRMLS_DC);
 zend_object_value cert_create_handler(zend_class_entry *type TSRMLS_DC);
-//функция инициализации класса. должна включаться в
-//функцию, инициализации модуля
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 void cert_init(TSRMLS_D);
 #endif

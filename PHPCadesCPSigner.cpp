@@ -5,15 +5,15 @@
 #include "PHPCadesCPAttributes.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//Методы
+//пїЅпїЅпїЅпїЅпїЅпїЅ
 PHP_METHOD(CPSigner, __construct) {
     sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    boost::shared_ptr<CPPCadesCPSignerObject> ptr(new CPPCadesCPSignerObject());
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPSignerObject> ptr(new CPPCadesCPSignerObject());
     obj->m_pCppCadesImpl = ptr;
 }
 
 PHP_METHOD(CPSigner, get_Certificate) {
-    boost::shared_ptr<CPPCadesCPCertificateObject> ctxt;
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> ctxt;
     sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_Certificate(ctxt));
@@ -36,7 +36,7 @@ PHP_METHOD(CPSigner, set_Certificate) {
     cert_obj *cobj = (cert_obj *)zend_object_store_get_object(cert TSRMLS_CC);
 
     HR_ERRORCHECK_RETURN(cobj->m_pCppCadesImpl->get_CertContext(ctxt));
-    boost::shared_ptr<CPPCadesCPCertificateObject> pCert(
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> pCert(
         new CPPCadesCPCertificateObject());
     pCert->put_CertContext(ctxt);
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_Certificate(pCert));
@@ -115,8 +115,8 @@ PHP_METHOD(CPSigner, get_CRLs) {
     unsigned int count;
     unsigned int len;
     char *str = NULL;
-    boost::shared_ptr<CryptoPro::CBlob> pBlob;
-    boost::shared_ptr<CPPCadesCPBlobsObject> ptr;
+    NS_SHARED_PTR::shared_ptr<CryptoPro::CBlob> pBlob;
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPBlobsObject> ptr;
 
     sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_CRLs(ptr));
@@ -138,8 +138,8 @@ PHP_METHOD(CPSigner, get_OCSPResponses) {
     unsigned int count;
     unsigned int len;
     char *str = NULL;
-    boost::shared_ptr<CryptoPro::CBlob> pBlob;
-    boost::shared_ptr<CPPCadesCPBlobsObject> ptr;
+    NS_SHARED_PTR::shared_ptr<CryptoPro::CBlob> pBlob;
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPBlobsObject> ptr;
 
     sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_OCSPResponses(ptr));
@@ -195,7 +195,7 @@ PHP_METHOD(CPSigner, set_KeyPin) {
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_KeyPin(pin));
 }
 
-//Вспомогательные функции обертки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 zend_object_handlers sig_obj_handlers;
 zend_class_entry *sig_ce;
 

@@ -3,11 +3,11 @@
 #include "PHPCadesCPOID.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//Методы
+//пїЅпїЅпїЅпїЅпїЅпїЅ
 PHP_METHOD(CPAttribute, __construct) {
     attr_obj *obj =
         (attr_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    boost::shared_ptr<CPPCadesCPAttributeObject> ptr(
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPAttributeObject> ptr(
         new CPPCadesCPAttributeObject());
     obj->m_pCppCadesImpl = ptr;
 }
@@ -33,8 +33,8 @@ PHP_METHOD(CPAttribute, get_OID) {
     oid_obj *oobj =
         (oid_obj *)zend_object_store_get_object(return_value TSRMLS_CC);
     oobj->m_pCppCadesImpl =
-        boost::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
-    boost::shared_ptr<CPPCadesCPOIDObject> ptr(new CPPCadesCPOIDObject());
+        NS_SHARED_PTR::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPOIDObject> ptr(new CPPCadesCPOIDObject());
 
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_OID(ptr));
     oobj->m_pCppCadesImpl = ptr;
@@ -150,7 +150,7 @@ PHP_METHOD(CPAttribute, get_ValueEncoding) {
     RETURN_LONG(type)
 }
 
-//Вспомогательные функции обертки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 zend_object_handlers attr_obj_handlers;
 zend_class_entry *attr_ce;
 
@@ -189,7 +189,7 @@ zend_object_value attr_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry attr_methods[] = {
     PHP_ME(CPAttribute, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPAttribute, set_OID, NULL, ZEND_ACC_PUBLIC)

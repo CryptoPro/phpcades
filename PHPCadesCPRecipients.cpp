@@ -17,7 +17,7 @@ PHP_METHOD(CPRecipients, Add) {
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->Add(Recipient->m_pCppCadesImpl));
 }
 
-//ядро метода, которое будет работать на самом деле
+//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 PHP_METHOD(CPRecipients, get_Count) {
     unsigned int value;
 
@@ -29,7 +29,7 @@ PHP_METHOD(CPRecipients, get_Count) {
     RETURN_LONG(value)
 }
 
-//ядро метода, которое будет работать на самом деле
+//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 PHP_METHOD(CPRecipients, get_Item) {
     long index;
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &index) ==
@@ -39,7 +39,7 @@ PHP_METHOD(CPRecipients, get_Item) {
     recipients_obj *obj =
         (recipients_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
-    boost::shared_ptr<CPPCadesCPCertificateObject> pVal;
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> pVal;
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_Item(index, pVal));
 
     object_init_ex(return_value, cert_ce);

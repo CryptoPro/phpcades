@@ -2,11 +2,11 @@
 #include "PHPCadesCPEKU.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//Методы
+//пїЅпїЅпїЅпїЅпїЅпїЅ
 PHP_METHOD(CPEKU, __construct) {
 
     eku_obj *obj = (eku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    boost::shared_ptr<CPPCadesCPEKUObject> eku(new CPPCadesCPEKUObject());
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPEKUObject> eku(new CPPCadesCPEKUObject());
     obj->m_pCppCadesImpl = eku;
 }
 
@@ -57,7 +57,7 @@ PHP_METHOD(CPEKU, set_OID) {
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_OID(OIDw));
 }
 
-//Вспомогательные функции обертки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 zend_object_handlers eku_obj_handlers;
 zend_class_entry *eku_ce;
 
@@ -96,7 +96,7 @@ zend_object_value eku_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry eku_methods[] = {
     PHP_ME(CPEKU, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPEKU, get_Name, NULL, ZEND_ACC_PUBLIC)

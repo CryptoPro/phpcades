@@ -7,7 +7,7 @@ using namespace CryptoPro::PKI::CAdES;
 PHP_METHOD(CPCertificates, __construct) {
     certs_obj *obj =
         (certs_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPCertificatesObject>(
+    obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificatesObject>(
         new CPPCadesCPCertificatesObject());
 }
 
@@ -106,7 +106,7 @@ PHP_METHOD(CPCertificates, Item) {
     certs_obj *obj =
         (certs_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
-    boost::shared_ptr<CPPCadesCPCertificateObject> context;
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> context;
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->Item(Idx, context));
 
     object_init_ex(return_value, cert_ce);
@@ -164,7 +164,7 @@ zend_object_value certs_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry certs_methods[] = {
     PHP_ME(CPCertificates, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPCertificates, Find, NULL, ZEND_ACC_PUBLIC)

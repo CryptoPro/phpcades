@@ -5,7 +5,7 @@ using namespace CryptoPro::PKI::CAdES;
 PHP_METHOD(CPHashedData, __construct) {
     hash_dat_obj *obj =
         (hash_dat_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPHashedDataObject>(
+    obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPHashedDataObject>(
         new CPPCadesCPHashedDataObject());
 }
 

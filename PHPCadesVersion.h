@@ -8,7 +8,7 @@
 //с объектом php
 struct version_obj {
     zend_object zo;
-    boost::shared_ptr<CryptoPro::PKI::CAdES::CPPVersionObject> m_pCppCadesImpl;
+    NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPVersionObject> m_pCppCadesImpl;
 };
 
 //хэндлеры для обработки объектов оборачиваемого класса

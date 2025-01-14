@@ -5,7 +5,7 @@
 
 struct sig_obj {
     zend_object zo;
-    boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPSignerObject> m_pCppCadesImpl;
+    NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPSignerObject> m_pCppCadesImpl;
 };
 
 extern zend_object_handlers sig_obj_handlers;
@@ -13,7 +13,7 @@ extern zend_class_entry *sig_ce;
 
 void sig_free_storage(void *object TSRMLS_DC);
 zend_object_value sig_create_handler(zend_class_entry *type TSRMLS_DC);
-//функция инициализации класса. должна включаться в
-//функцию, инициализации модуля
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 void sig_init(TSRMLS_D);
 #endif

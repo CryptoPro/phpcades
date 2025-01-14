@@ -7,7 +7,7 @@ using namespace CryptoPro::PKI::CAdES;
 PHP_METHOD(CPPublicKey, __construct) {
     public_key_obj *obj =
         (public_key_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPPublicKeyObject>(
+    obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPPublicKeyObject>(
         new CPPCadesCPPublicKeyObject());
 }
 
@@ -19,7 +19,7 @@ PHP_METHOD(CPPublicKey, get_Algorithm) {
     oid_obj *oobj =
         (oid_obj *)zend_object_store_get_object(return_value TSRMLS_CC);
     oobj->m_pCppCadesImpl =
-        boost::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
+        NS_SHARED_PTR::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
 
     HR_ERRORCHECK_RETURN(
         obj->m_pCppCadesImpl->get_Algorithm(oobj->m_pCppCadesImpl));
@@ -97,7 +97,7 @@ zend_object_value public_key_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry public_key_methods[] = {
     PHP_ME(CPPublicKey, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPPublicKey, get_Algorithm, NULL, ZEND_ACC_PUBLIC)

@@ -3,11 +3,11 @@
 #include "PHPCadesCPAttribute.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//Методы
+//пїЅпїЅпїЅпїЅпїЅпїЅ
 PHP_METHOD(CPAttributes, __construct) {
     attr_col *obj =
         (attr_col *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    boost::shared_ptr<CPPCadesCPAttributesObject> ptr(
+    NS_SHARED_PTR::shared_ptr<CPPCadesCPAttributesObject> ptr(
         new CPPCadesCPAttributesObject());
     obj->m_pCppCadesImpl = ptr;
 }
@@ -80,7 +80,7 @@ PHP_METHOD(CPAttributes, Assign) {
         aobj->m_pCppCadesImpl->get_CryptAttributesStruct()));
 }
 
-//Вспомогательные функции обертки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 zend_class_entry *attr_col_ce;
 zend_object_handlers attr_col_handlers;
 
@@ -119,7 +119,7 @@ zend_object_value attr_col_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry attr_col_methods[] = {
     PHP_ME(CPAttributes, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPAttributes, Add, NULL, ZEND_ACC_PUBLIC)

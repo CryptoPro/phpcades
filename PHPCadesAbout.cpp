@@ -3,14 +3,14 @@
 #include "PHPCadesVersion.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//Полное объявление структуры
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
-//Методы
+//пїЅпїЅпїЅпїЅпїЅпїЅ
 PHP_METHOD(About, __construct) {
     about_obj *obj =
         (about_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
     obj->m_pCppCadesImpl =
-        boost::shared_ptr<CPPCadesAboutObject>(new CPPCadesAboutObject());
+        NS_SHARED_PTR::shared_ptr<CPPCadesAboutObject>(new CPPCadesAboutObject());
 }
 
 PHP_METHOD(About, get_MajorVersion) {
@@ -54,7 +54,7 @@ PHP_METHOD(About, get_Version) {
 
 PHP_METHOD(About, PluginVersion) {
 
-    boost::shared_ptr<CPPVersionObject> version;
+    NS_SHARED_PTR::shared_ptr<CPPVersionObject> version;
 
     about_obj *obj =
         (about_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -68,7 +68,7 @@ PHP_METHOD(About, PluginVersion) {
 
 PHP_METHOD(About, CSPVersion) {
 
-    boost::shared_ptr<CPPVersionObject> version;
+    NS_SHARED_PTR::shared_ptr<CPPVersionObject> version;
     char *szProvName;
     int szProvName_len = 0;
     DWORD dwProvType = 75;
@@ -90,7 +90,7 @@ PHP_METHOD(About, CSPVersion) {
     pCSPVersion->m_pCppCadesImpl = version;
 }
 
-//Вспомогательные функции обертки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 zend_object_handlers about_obj_handlers;
 zend_class_entry *about_ce;
 
@@ -129,7 +129,7 @@ zend_object_value about_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//связывание методов класса в function entry
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 zend_function_entry about_methods[] = {
     PHP_ME(About, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(About, get_MajorVersion, NULL, ZEND_ACC_PUBLIC)

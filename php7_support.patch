@@ -4,14 +4,14 @@ Index: PHPCadesAbout.cpp
 +++ PHPCadesAbout.cpp	(working copy)
 @@ -7,8 +7,9 @@
  
- //Методы
+ //пїЅпїЅпїЅпїЅпїЅпїЅ
  PHP_METHOD(About, __construct) {
 +    zend_object *zobj = Z_OBJ_P(getThis());
      about_obj *obj =
 -        (about_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (about_obj *)((char *)zobj - XtOffsetOf(about_obj, zobj));
      obj->m_pCppCadesImpl =
-         boost::shared_ptr<CPPCadesAboutObject>(new CPPCadesAboutObject());
+         NS_SHARED_PTR::shared_ptr<CPPCadesAboutObject>(new CPPCadesAboutObject());
  }
 @@ -15,8 +16,9 @@
  
@@ -59,7 +59,7 @@ Index: PHPCadesAbout.cpp
      RETURN_ATL_STRING(AtlVersion);
 @@ -56,13 +61,17 @@
  
-     boost::shared_ptr<CPPVersionObject> version;
+     NS_SHARED_PTR::shared_ptr<CPPVersionObject> version;
  
 +    zend_object *zobj = Z_OBJ_P(getThis());
      about_obj *obj =
@@ -79,7 +79,7 @@ Index: PHPCadesAbout.cpp
  
 @@ -70,7 +79,7 @@
  
-     boost::shared_ptr<CPPVersionObject> version;
+     NS_SHARED_PTR::shared_ptr<CPPVersionObject> version;
      char *szProvName;
 -    int szProvName_len = 0;
 +    size_t szProvName_len = 0;
@@ -157,7 +157,7 @@ Index: PHPCadesAbout.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -147,4 +143,6 @@
      memcpy(&about_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -171,35 +171,35 @@ Index: PHPCadesAbout.h
 +++ PHPCadesAbout.h	(working copy)
 @@ -6,11 +6,11 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct about_obj {
 -    zend_object zo;
 +typedef struct _about_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesAboutObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesAboutObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} about_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers about_obj_handlers;
 @@ -18,11 +18,11 @@
  extern zend_class_entry *about_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void about_free_storage(void *object TSRMLS_DC);
 +// void about_free_storage(void *object TSRMLS_DC);
  
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value about_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value about_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPAlgorithm.cpp
 ===================================================================
 --- PHPCadesCPAlgorithm.cpp	(revision 161471)
@@ -310,7 +310,7 @@ Index: PHPCadesCPAlgorithm.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -104,8 +92,9 @@
      PHP_ME(CPAlgorithm, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
      PHP_ME(CPAlgorithm, get_Name, NULL, ZEND_ACC_PUBLIC)
@@ -336,8 +336,8 @@ Index: PHPCadesCPAlgorithm.h
 +++ PHPCadesCPAlgorithm.h	(working copy)
 @@ -5,21 +5,21 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct algo_obj {
 -    zend_object zo;
 +typedef struct _algo_obj {
@@ -346,38 +346,38 @@ Index: PHPCadesCPAlgorithm.h
 +    zend_object zobj; /* MUST be the last element */
 +} algo_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers algo_obj_handlers;
  extern zend_class_entry *algo_ce;
  
--//функция освобождения памяти. используется при уничтожении объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void algo_free_storage(void *object TSRMLS_DC);
-+// //функция освобождения памяти. используется при уничтожении объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// void algo_free_storage(void *object TSRMLS_DC);
  
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value algo_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value algo_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPAttribute.cpp
 ===================================================================
 --- PHPCadesCPAttribute.cpp	(revision 161471)
 +++ PHPCadesCPAttribute.cpp	(working copy)
 @@ -5,8 +5,9 @@
  
- //Методы
+ //пїЅпїЅпїЅпїЅпїЅпїЅ
  PHP_METHOD(CPAttribute, __construct) {
 -    attr_obj *obj =
 -        (attr_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    attribute_obj *obj =
 +        (attribute_obj *)((char *)zobj - XtOffsetOf(attribute_obj, zobj));
-     boost::shared_ptr<CPPCadesCPAttributeObject> ptr(
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPAttributeObject> ptr(
          new CPPCadesCPAttributeObject());
      obj->m_pCppCadesImpl = ptr;
 @@ -16,22 +17,26 @@
@@ -411,8 +411,8 @@ Index: PHPCadesCPAttribute.cpp
 -        (oid_obj *)zend_object_store_get_object(return_value TSRMLS_CC);
 +        (oid_obj *)((char *)zobj - XtOffsetOf(oid_obj, zobj));
      oobj->m_pCppCadesImpl =
-         boost::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
-     boost::shared_ptr<CPPCadesCPOIDObject> ptr(new CPPCadesCPOIDObject());
+         NS_SHARED_PTR::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPOIDObject> ptr(new CPPCadesCPOIDObject());
 @@ -44,14 +49,16 @@
      CryptoPro::CBlob val;
      CADESCOM_ATTRIBUTE Name;
@@ -526,7 +526,7 @@ Index: PHPCadesCPAttribute.cpp
 @@ -151,42 +163,25 @@
  }
  
- //Вспомогательные функции обертки
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_handlers attr_obj_handlers;
 -zend_class_entry *attr_ce;
 +zend_object_handlers attribute_obj_handlers;
@@ -578,7 +578,7 @@ Index: PHPCadesCPAttribute.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -205,9 +200,11 @@
  void attr_init(TSRMLS_D) {
      zend_class_entry ce;
@@ -601,12 +601,12 @@ Index: PHPCadesCPAttribute.h
 +++ PHPCadesCPAttribute.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct attr_obj {
 -    zend_object zo;
 +typedef struct _attribute_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPAttributeObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPAttributeObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
@@ -621,8 +621,8 @@ Index: PHPCadesCPAttribute.h
 -zend_object_value attr_create_handler(zend_class_entry *type TSRMLS_DC);
 +// // void attr_free_storage(void *object TSRMLS_DC);
 +// zend_object_value attr_create_handler(zend_class_entry *type TSRMLS_DC);
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  void attr_init(TSRMLS_D);
 Index: PHPCadesCPAttributes.cpp
 ===================================================================
@@ -630,14 +630,14 @@ Index: PHPCadesCPAttributes.cpp
 +++ PHPCadesCPAttributes.cpp	(working copy)
 @@ -5,8 +5,9 @@
  
- //Методы
+ //пїЅпїЅпїЅпїЅпїЅпїЅ
  PHP_METHOD(CPAttributes, __construct) {
 -    attr_col *obj =
 -        (attr_col *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    attributes_col_obj *obj =
 +        (attributes_col_obj *)((char *)zobj - XtOffsetOf(attributes_col_obj, zobj));
-     boost::shared_ptr<CPPCadesCPAttributesObject> ptr(
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPAttributesObject> ptr(
          new CPPCadesCPAttributesObject());
      obj->m_pCppCadesImpl = ptr;
 @@ -14,20 +15,24 @@
@@ -737,7 +737,7 @@ Index: PHPCadesCPAttributes.cpp
          aobj->m_pCppCadesImpl->get_CryptAttributesStruct()));
  }
  
- //Вспомогательные функции обертки
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_class_entry *attr_col_ce;
 -zend_object_handlers attr_col_handlers;
 +zend_class_entry *attributes_col_ce;
@@ -789,7 +789,7 @@ Index: PHPCadesCPAttributes.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 -zend_function_entry attr_col_methods[] = {
 +zend_function_entry attributes_col_obj_methods[] = {
      PHP_ME(CPAttributes, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
@@ -819,12 +819,12 @@ Index: PHPCadesCPAttributes.h
 +++ PHPCadesCPAttributes.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct attr_col {
 -    zend_object zo;
 +typedef struct _attributes_col_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPAttributesObject> m_pCppCadesImpl;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPAttributesObject> m_pCppCadesImpl;
      zend_class_entry *type;
 -};
 +    zend_object zobj; /* MUST be the last element */
@@ -840,8 +840,8 @@ Index: PHPCadesCPAttributes.h
 +// void attr_col_free_storage(void *object TSRMLS_DC);
 +// zend_object_value attr_col_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPBasicConstraints.cpp
 ===================================================================
 --- PHPCadesCPBasicConstraints.cpp	(revision 161471)
@@ -854,7 +854,7 @@ Index: PHPCadesCPBasicConstraints.cpp
      basic_constr_obj *obj =
 -        (basic_constr_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (basic_constr_obj *)((char *)zobj - XtOffsetOf(basic_constr_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPBasicConstraintsObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPBasicConstraintsObject>(
          new CPPCadesCPBasicConstraintsObject());
  }
 @@ -12,8 +13,9 @@
@@ -986,7 +986,7 @@ Index: PHPCadesCPBasicConstraints.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -150,4 +139,6 @@
      memcpy(&basic_constr_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -1000,34 +1000,34 @@ Index: PHPCadesCPBasicConstraints.h
 +++ PHPCadesCPBasicConstraints.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct basic_constr_obj {
 -    zend_object zo;
 +typedef struct _basic_constr_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPBasicConstraintsObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPBasicConstraintsObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} basic_constr_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers basic_constr_obj_handlers;
 @@ -16,10 +16,10 @@
  extern zend_class_entry *basic_constr_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void basic_constr_free_storage(void *object TSRMLS_DC);
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value basic_constr_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void basic_constr_free_storage(void *object TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value basic_constr_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPCardholderData.cpp
 ===================================================================
 --- PHPCadesCPCardholderData.cpp	(revision 161471)
@@ -1215,7 +1215,7 @@ Index: PHPCadesCPCardholderData.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -169,4 +176,6 @@
      memcpy(&chd_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -1229,8 +1229,8 @@ Index: PHPCadesCPCardholderData.h
 +++ PHPCadesCPCardholderData.h	(working copy)
 @@ -5,10 +5,10 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct chd_obj {
 -    zend_object zo;
 +typedef struct _chd_obj {
@@ -1239,37 +1239,37 @@ Index: PHPCadesCPCardholderData.h
 +    zend_object zobj; /* MUST be the last element */
 +} chd_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers chd_obj_handlers;
 @@ -15,10 +15,10 @@
  extern zend_class_entry *chd_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void chd_free_storage(void *object TSRMLS_DC);
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value chd_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void chd_free_storage(void *object TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value chd_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPCertificate.cpp
 ===================================================================
 --- PHPCadesCPCertificate.cpp	(revision 161471)
 +++ PHPCadesCPCertificate.cpp	(working copy)
 @@ -11,8 +11,9 @@
  
- //Методы
+ //пїЅпїЅпїЅпїЅпїЅпїЅ
  PHP_METHOD(CPCertificate, __construct) {
 -    cert_obj *obj =
 -        (cert_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    certificate_obj *obj =
 +        (certificate_obj *)((char *)zobj - XtOffsetOf(certificate_obj, zobj));
-     boost::shared_ptr<CPPCadesCPCertificateObject> cert(
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> cert(
          new CPPCadesCPCertificateObject());
      obj->m_pCppCadesImpl = cert;
 @@ -29,8 +30,9 @@
@@ -1318,7 +1318,7 @@ Index: PHPCadesCPCertificate.cpp
      HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->HasPrivateKey(&has));
      if (has)
 @@ -68,35 +72,41 @@
-     boost::shared_ptr<CPPCadesCPCertificateStatusObject> stat(
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateStatusObject> stat(
          new CPPCadesCPCertificateStatusObject());
  
 -    cert_obj *obj =
@@ -1384,8 +1384,8 @@ Index: PHPCadesCPCertificate.cpp
      str = (char *)ecalloc(len, sizeof(char));
      memcpy(str, value.pbData(), len);
  
--    RETURN_STRINGL(str, len - 2 , 0); //удаляем перевод строки иначе php будет мусор оставлять в переменных
-+    RETURN_STRINGL(str, len - 2); //удаляем перевод строки иначе php будет мусор оставлять в переменных
+-    RETURN_STRINGL(str, len - 2 , 0); //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ php пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
++    RETURN_STRINGL(str, len - 2); //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ php пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  }
  
  PHP_METHOD(CPCertificate, Import) {
@@ -1548,7 +1548,7 @@ Index: PHPCadesCPCertificate.cpp
 @@ -257,42 +281,25 @@
  }
  
- //Вспомогательные функции обертки
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_handlers cert_obj_handlers;
 +zend_object_handlers certificate_obj_handlers;
  zend_class_entry *cert_ce;
@@ -1599,7 +1599,7 @@ Index: PHPCadesCPCertificate.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -319,10 +326,12 @@
  
  void cert_init(TSRMLS_D) {
@@ -1622,12 +1622,12 @@ Index: PHPCadesCPCertificate.h
 +++ PHPCadesCPCertificate.h	(working copy)
 @@ -5,17 +5,16 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct cert_obj {
 -    zend_object zo;
 +typedef struct _certificate_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPCertificateObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPCertificateObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
@@ -1640,8 +1640,8 @@ Index: PHPCadesCPCertificate.h
 -void cert_free_storage(void *object TSRMLS_DC);
 -zend_object_value cert_create_handler(zend_class_entry *type TSRMLS_DC);
 +// zend_object* cert_create_handler(zend_class_entry *ce TSRMLS_DC);
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  void cert_init(TSRMLS_D);
 Index: PHPCadesCPCertificateStatus.cpp
 ===================================================================
@@ -1655,7 +1655,7 @@ Index: PHPCadesCPCertificateStatus.cpp
      certstat_obj *obj =
 -        (certstat_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (certstat_obj *)((char *)zobj - XtOffsetOf(certstat_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPCertificateStatusObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateStatusObject>(
          new CPPCadesCPCertificateStatusObject());
  }
 @@ -14,8 +15,9 @@
@@ -1695,7 +1695,7 @@ Index: PHPCadesCPCertificateStatus.cpp
 @@ -49,14 +54,17 @@
  
  PHP_METHOD(CPCertificateStatus, EKU) {
-     boost::shared_ptr<CPPCadesCPEKUObject> ptr(new CPPCadesCPEKUObject());
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPEKUObject> ptr(new CPPCadesCPEKUObject());
 +
 +    zend_object *zobj = Z_OBJ_P(getThis());
      certstat_obj *obj =
@@ -1802,7 +1802,7 @@ Index: PHPCadesCPCertificateStatus.cpp
          add_next_index_zval(CPoid, return_value);
      }
 @@ -167,15 +183,17 @@
-     boost::shared_ptr<CPPCadesCPCertificatesObject> certs(
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificatesObject> certs(
          new CPPCadesCPCertificatesObject());
  
 +    zend_object *zobj = Z_OBJ_P(getThis());
@@ -1871,7 +1871,7 @@ Index: PHPCadesCPCertificateStatus.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -242,4 +243,6 @@
      memcpy(&certstat_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -1885,35 +1885,35 @@ Index: PHPCadesCPCertificateStatus.h
 +++ PHPCadesCPCertificateStatus.h	(working copy)
 @@ -5,22 +5,22 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct certstat_obj {
 -    zend_object zo;
 +typedef struct _certstat_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPCertificateStatusObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPCertificateStatusObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} certstat_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers certstat_obj_handlers;
  extern zend_class_entry *certstat_ce;
  
--//функция освобождения памяти. используется при уничтожении объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void certstat_free_storage(void *object TSRMLS_DC);
-+// //функция освобождения памяти. используется при уничтожении объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// void certstat_free_storage(void *object TSRMLS_DC);
  
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value certstat_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value certstat_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPCertificates.cpp
 ===================================================================
 --- PHPCadesCPCertificates.cpp	(revision 161471)
@@ -1926,7 +1926,7 @@ Index: PHPCadesCPCertificates.cpp
      certs_obj *obj =
 -        (certs_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (certs_obj *)((char *)zobj - XtOffsetOf(certs_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPCertificatesObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificatesObject>(
          new CPPCadesCPCertificatesObject());
  }
 @@ -37,7 +38,7 @@
@@ -1973,7 +1973,7 @@ Index: PHPCadesCPCertificates.cpp
 -        (certs_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (certs_obj *)((char *)zobj - XtOffsetOf(certs_obj, zobj));
  
-     boost::shared_ptr<CPPCadesCPCertificateObject> context;
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> context;
      HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->Item(Idx, context));
  
      object_init_ex(return_value, cert_ce);
@@ -2046,7 +2046,7 @@ Index: PHPCadesCPCertificates.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -179,4 +168,6 @@
      memcpy(&certs_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2060,48 +2060,48 @@ Index: PHPCadesCPCertificates.h
 +++ PHPCadesCPCertificates.h	(working copy)
 @@ -3,11 +3,11 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct certs_obj {
 -    zend_object zo;
 +typedef struct _certs_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPCertificatesObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPCertificatesObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} certs_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers certs_obj_handlers;
 @@ -14,11 +14,11 @@
  extern zend_class_entry *certs_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void certs_free_storage(void *object TSRMLS_DC);
 +// void certs_free_storage(void *object TSRMLS_DC);
  
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value certs_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value certs_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPEKU.cpp
 ===================================================================
 --- PHPCadesCPEKU.cpp	(revision 161471)
 +++ PHPCadesCPEKU.cpp	(working copy)
 @@ -5,7 +5,9 @@
- //Методы
+ //пїЅпїЅпїЅпїЅпїЅпїЅ
  PHP_METHOD(CPEKU, __construct) {
  
 -    eku_obj *obj = (eku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    eku_obj *obj =
 +        (eku_obj *)((char *)zobj - XtOffsetOf(eku_obj, zobj));
-     boost::shared_ptr<CPPCadesCPEKUObject> eku(new CPPCadesCPEKUObject());
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPEKUObject> eku(new CPPCadesCPEKUObject());
      obj->m_pCppCadesImpl = eku;
  }
 @@ -13,7 +15,9 @@
@@ -2213,7 +2213,7 @@ Index: PHPCadesCPEKU.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -112,4 +105,6 @@
      memcpy(&eku_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2227,17 +2227,17 @@ Index: PHPCadesCPEKU.h
 +++ PHPCadesCPEKU.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct eku_obj {
 -    zend_object zo;
 +typedef struct _eku_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPEKUObject> m_pCppCadesImpl;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPEKUObject> m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} eku_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers eku_obj_handlers;
  extern zend_class_entry *eku_ce;
  
@@ -2246,21 +2246,21 @@ Index: PHPCadesCPEKU.h
 +// void eku_free_storage(void *object TSRMLS_DC);
 +// zend_object_value item_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPEKUs.cpp
 ===================================================================
 --- PHPCadesCPEKUs.cpp	(revision 161471)
 +++ PHPCadesCPEKUs.cpp	(working copy)
 @@ -5,7 +5,9 @@
  
- //Методы
+ //пїЅпїЅпїЅпїЅпїЅпїЅ
  PHP_METHOD(CPEKUs, __construct) {
 -    eku_col *obj = (eku_col *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    eku_col_obj *obj =
 +        (eku_col_obj *)((char *)zobj - XtOffsetOf(eku_col_obj, zobj));
-     boost::shared_ptr<CPPCadesCPEKUsObject> ptr(new CPPCadesCPEKUsObject());
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPEKUsObject> ptr(new CPPCadesCPEKUsObject());
      obj->m_pCppCadesImpl = ptr;
  }
 @@ -12,19 +14,24 @@
@@ -2330,7 +2330,7 @@ Index: PHPCadesCPEKUs.cpp
      HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->Remove(idx));
  }
  
- //Вспомогательные функции обертки
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
  zend_class_entry *eku_col_ce;
 -zend_object_handlers eku_col_handlers;
 +zend_object_handlers eku_col_obj_handlers;
@@ -2381,7 +2381,7 @@ Index: PHPCadesCPEKUs.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -117,7 +114,9 @@
      INIT_CLASS_ENTRY(ce, "CPEKUs", eku_col_methods);
      eku_col_ce = zend_register_internal_class(&ce TSRMLS_CC);
@@ -2400,12 +2400,12 @@ Index: PHPCadesCPEKUs.h
 +++ PHPCadesCPEKUs.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct eku_col {
 -    zend_object zo;
 +typedef struct _eku_col_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPEKUsObject> m_pCppCadesImpl;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPEKUsObject> m_pCppCadesImpl;
      zend_class_entry *type;
 -};
 +    zend_object zobj; /* MUST be the last element */
@@ -2419,8 +2419,8 @@ Index: PHPCadesCPEKUs.h
 +// void eku_col_free_storage(void *object TSRMLS_DC);
 +// zend_object_value eku_col_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPEncodedData.cpp
 ===================================================================
 --- PHPCadesCPEncodedData.cpp	(revision 161471)
@@ -2433,7 +2433,7 @@ Index: PHPCadesCPEncodedData.cpp
      encoded_data_obj *obj =
 -        (encoded_data_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (encoded_data_obj *)((char *)zobj - XtOffsetOf(encoded_data_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPEncodedDataObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPEncodedDataObject>(
          new CPPCadesCPEncodedDataObject());
  }
 @@ -14,8 +15,9 @@
@@ -2517,7 +2517,7 @@ Index: PHPCadesCPEncodedData.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -106,4 +90,6 @@
      memcpy(&encoded_data_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2531,34 +2531,34 @@ Index: PHPCadesCPEncodedData.h
 +++ PHPCadesCPEncodedData.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct encoded_data_obj {
 -    zend_object zo;
 +typedef struct _encoded_data_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPEncodedDataObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPEncodedDataObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} encoded_data_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers encoded_data_obj_handlers;
 @@ -16,10 +16,10 @@
  extern zend_class_entry *encoded_data_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void encoded_data_free_storage(void *object TSRMLS_DC);
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value encoded_data_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void encoded_data_free_storage(void *object TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value encoded_data_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPEnvelopedData.cpp
 ===================================================================
 --- PHPCadesCPEnvelopedData.cpp	(revision 161471)
@@ -2731,7 +2731,7 @@ Index: PHPCadesCPEnvelopedData.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -171,4 +162,6 @@
      memcpy(&enveloped_data_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2745,8 +2745,8 @@ Index: PHPCadesCPEnvelopedData.h
 +++ PHPCadesCPEnvelopedData.h	(working copy)
 @@ -5,10 +5,10 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct enveloped_data_obj {
 -    zend_object zo;
 +typedef struct _enveloped_data_obj {
@@ -2755,25 +2755,25 @@ Index: PHPCadesCPEnvelopedData.h
 +    zend_object zobj; /* MUST be the last element */
 +} enveloped_data_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers enveloped_data_obj_handlers;
 @@ -15,11 +15,11 @@
  extern zend_class_entry *enveloped_data_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void enveloped_data_free_storage(void *object TSRMLS_DC);
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value enveloped_data_create_handler(zend_class_entry *type
 -                                                    TSRMLS_DC);
 +// void enveloped_data_free_storage(void *object TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value enveloped_data_create_handler(zend_class_entry *type
 +//                                                     TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPExtendedKeyUsage.cpp
 ===================================================================
 --- PHPCadesCPExtendedKeyUsage.cpp	(revision 161471)
@@ -2787,7 +2787,7 @@ Index: PHPCadesCPExtendedKeyUsage.cpp
      exku_obj *obj =
 -        (exku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (exku_obj *)((char *)zobj - XtOffsetOf(exku_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPExtendedKeyUsageObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPExtendedKeyUsageObject>(
          new CPPCadesCPExtendedKeyUsageObject());
  }
 @@ -15,8 +15,9 @@
@@ -2820,7 +2820,7 @@ Index: PHPCadesCPExtendedKeyUsage.cpp
      exku_obj *obj =
 -        (exku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (exku_obj *)((char *)zobj - XtOffsetOf(exku_obj, zobj));
-     boost::shared_ptr<CPPCadesCPEKUsObject> ptr(new CPPCadesCPEKUsObject());
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPEKUsObject> ptr(new CPPCadesCPEKUsObject());
  
      HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_EKUs(ptr));
  
@@ -2883,7 +2883,7 @@ Index: PHPCadesCPExtendedKeyUsage.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -101,4 +88,6 @@
      memcpy(&exku_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2897,33 +2897,33 @@ Index: PHPCadesCPExtendedKeyUsage.h
 +++ PHPCadesCPExtendedKeyUsage.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct exku_obj {
 -    zend_object zo;
 +typedef struct _exku_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPExtendedKeyUsageObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPExtendedKeyUsageObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} exku_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers exku_obj_handlers;
 @@ -16,11 +16,11 @@
  extern zend_class_entry *exku_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void exku_free_storage(void *object TSRMLS_DC);
 +// void exku_free_storage(void *object TSRMLS_DC);
  
- //функция создания хэндлера для нового объекта класса. используется при
- //создании новых объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value exku_create_handler(zend_class_entry *type TSRMLS_DC);
 +// zend_object_value exku_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPHashedData.cpp
 ===================================================================
 --- PHPCadesCPHashedData.cpp    (revision 189859)
@@ -2937,7 +2937,7 @@ Index: PHPCadesCPHashedData.cpp
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    hashed_data_obj *obj =
 +        (hashed_data_obj *)((char *)zobj - XtOffsetOf(hashed_data_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPHashedDataObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPHashedDataObject>(
          new CPPCadesCPHashedDataObject());
  }
 @@ -11,20 +12,21 @@
@@ -3152,18 +3152,18 @@ Index: PHPCadesCPHashedData.h
 +++ PHPCadesCPHashedData.h  (working copy)
 @@ -5,21 +5,21 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct hash_dat_obj {
 -    zend_object zo;
 +typedef struct hashed_data_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPHashedDataObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPHashedDataObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} hashed_data_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 -extern zend_class_entry *hash_dat_class_entry;
 -extern zend_object_handlers hash_dat_handlers;
 +extern zend_class_entry *hashed_data_ce;
@@ -3174,8 +3174,8 @@ Index: PHPCadesCPHashedData.h
 +// void hashed_data_free_storage(void *object TSRMLS_DC);
 +// zend_object_value hashed_data_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 -void hash_dat_init(TSRMLS_D);
 +void hashed_data_init(TSRMLS_D);
  
@@ -3191,7 +3191,7 @@ Index: PHPCadesCPKeyUsage.cpp
 -    ku_obj *obj = (ku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    ku_obj *obj = (ku_obj *)((char *)zobj - XtOffsetOf(ku_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPKeyUsageObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPKeyUsageObject>(
          new CPPCadesCPKeyUsageObject());
  }
 @@ -11,7 +12,8 @@
@@ -3354,7 +3354,7 @@ Index: PHPCadesCPKeyUsage.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -206,8 +201,8 @@
      PHP_ME(CPKeyUsage, get_IsKeyCertSignEnabled, NULL, ZEND_ACC_PUBLIC)
      PHP_ME(CPKeyUsage, get_IsCRLSignEnabled, NULL, ZEND_ACC_PUBLIC)
@@ -3379,34 +3379,34 @@ Index: PHPCadesCPKeyUsage.h
 +++ PHPCadesCPKeyUsage.h	(working copy)
 @@ -5,10 +5,10 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct ku_obj {
 -    zend_object zo;
 +typedef struct _ku_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPKeyUsageObject> m_pCppCadesImpl;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPKeyUsageObject> m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} ku_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers ku_obj_handlers;
 @@ -15,11 +15,11 @@
  extern zend_class_entry *ku_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void ku_free_storage(void *object TSRMLS_DC);
 +// void ku_free_storage(void *object TSRMLS_DC);
  
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value ku_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value ku_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPOID.cpp
 ===================================================================
 --- PHPCadesCPOID.cpp	(revision 161471)
@@ -3419,11 +3419,11 @@ Index: PHPCadesCPOID.cpp
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    oid_obj *obj = (oid_obj *)((char *)zobj - XtOffsetOf(oid_obj, zobj));
      obj->m_pCppCadesImpl =
-         boost::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
+         NS_SHARED_PTR::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
  }
 @@ -11,7 +12,8 @@
  PHP_METHOD(CPOID, get_Value) {
-     boost::shared_ptr<CAtlStringA> atl;
+     NS_SHARED_PTR::shared_ptr<CAtlStringA> atl;
  
 -    oid_obj *obj = (oid_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
@@ -3504,7 +3504,7 @@ Index: PHPCadesCPOID.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -94,4 +81,6 @@
      memcpy(&oid_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -3518,33 +3518,33 @@ Index: PHPCadesCPOID.h
 +++ PHPCadesCPOID.h	(working copy)
 @@ -5,10 +5,10 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct oid_obj {
 -    zend_object zo;
 +typedef struct _oid_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPOIDObject> m_pCppCadesImpl;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPOIDObject> m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} oid_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers oid_obj_handlers;
 @@ -15,10 +15,10 @@
  extern zend_class_entry *oid_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void oid_free_storage(void *object TSRMLS_DC);
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value oid_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void oid_free_storage(void *object TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value oid_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPPrivateKey.cpp
 ===================================================================
 --- PHPCadesCPPrivateKey.cpp	(revision 161471)
@@ -3557,7 +3557,7 @@ Index: PHPCadesCPPrivateKey.cpp
      private_key_obj *obj =
 -        (private_key_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (private_key_obj *)((char *)zobj - XtOffsetOf(private_key_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPPrivateKeyObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPPrivateKeyObject>(
          new CPPCadesCPPrivateKeyObject());
  }
 @@ -13,8 +14,9 @@
@@ -3665,7 +3665,7 @@ Index: PHPCadesCPPrivateKey.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -123,4 +112,6 @@
      memcpy(&private_key_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -3679,34 +3679,34 @@ Index: PHPCadesCPPrivateKey.h
 +++ PHPCadesCPPrivateKey.h	(working copy)
 @@ -5,21 +5,21 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct private_key_obj {
 -    zend_object zo;
 +typedef struct _private_key_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPPrivateKeyObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPPrivateKeyObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} private_key_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers private_key_obj_handlers;
  extern zend_class_entry *private_key_ce;
  
--//функция освобождения памяти. используется при уничтожении объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void private_key_free_storage(void *object TSRMLS_DC);
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value private_key_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //функция освобождения памяти. используется при уничтожении объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// void private_key_free_storage(void *object TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value private_key_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPPublicKey.cpp
 ===================================================================
 --- PHPCadesCPPublicKey.cpp	(revision 161471)
@@ -3719,7 +3719,7 @@ Index: PHPCadesCPPublicKey.cpp
      public_key_obj *obj =
 -        (public_key_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (public_key_obj *)((char *)zobj - XtOffsetOf(public_key_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesCPPublicKeyObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPPublicKeyObject>(
          new CPPCadesCPPublicKeyObject());
  }
  
@@ -3735,7 +3735,7 @@ Index: PHPCadesCPPublicKey.cpp
 -        (oid_obj *)zend_object_store_get_object(return_value TSRMLS_CC);
 +        (oid_obj *)((char *)zobj - XtOffsetOf(oid_obj, zobj));
      oobj->m_pCppCadesImpl =
-         boost::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
+         NS_SHARED_PTR::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
  
 @@ -28,8 +31,9 @@
  PHP_METHOD(CPPublicKey, get_Length) {
@@ -3834,7 +3834,7 @@ Index: PHPCadesCPPublicKey.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -103,8 +93,8 @@
      PHP_ME(CPPublicKey, get_Algorithm, NULL, ZEND_ACC_PUBLIC)
      PHP_ME(CPPublicKey, get_Length, NULL, ZEND_ACC_PUBLIC)
@@ -3859,34 +3859,34 @@ Index: PHPCadesCPPublicKey.h
 +++ PHPCadesCPPublicKey.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct public_key_obj {
 -    zend_object zo;
 +typedef struct _public_key_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPPublicKeyObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPPublicKeyObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} public_key_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers public_key_obj_handlers;
 @@ -16,10 +16,10 @@
  extern zend_class_entry *public_key_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void public_key_free_storage(void *object TSRMLS_DC);
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value public_key_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void public_key_free_storage(void *object TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value public_key_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPRawSignature.cpp
 ===================================================================
 --- PHPCadesCPRawSignature.cpp	(revision 161471)
@@ -3899,7 +3899,7 @@ Index: PHPCadesCPRawSignature.cpp
      raw_sig_obj *obj =
 -        (raw_sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (raw_sig_obj *)((char *)zobj - XtOffsetOf(raw_sig_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesRawSignatureObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesRawSignatureObject>(
          new CPPCadesRawSignatureObject());
  }
 @@ -14,23 +15,27 @@
@@ -4041,18 +4041,18 @@ Index: PHPCadesCPRawSignature.h
 +++ PHPCadesCPRawSignature.h	(working copy)
 @@ -5,18 +5,18 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct raw_sig_obj {
 -    zend_object zo;
 +typedef struct _raw_sig_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesRawSignatureObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesRawSignatureObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} raw_sig_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 -extern zend_class_entry *raw_sig_class_entry;
 -extern zend_object_handlers raw_sig_handlers;
 +extern zend_class_entry *raw_sig_ce;
@@ -4063,8 +4063,8 @@ Index: PHPCadesCPRawSignature.h
 +// void raw_sig_free_storage(void *object TSRMLS_DC);
 +// zend_object_value raw_sig_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPRecipients.cpp
 ===================================================================
 --- PHPCadesCPRecipients.cpp	(revision 161471)
@@ -4113,7 +4113,7 @@ Index: PHPCadesCPRecipients.cpp
 -        (recipients_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (recipients_obj *)((char *)zobj - XtOffsetOf(recipients_obj, zobj));
  
-     boost::shared_ptr<CPPCadesCPCertificateObject> pVal;
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> pVal;
      HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_Item(index, pVal));
  
      object_init_ex(return_value, cert_ce);
@@ -4222,18 +4222,18 @@ Index: PHPCadesCPRecipients.h
 +++ PHPCadesCPRecipients.h	(working copy)
 @@ -5,18 +5,18 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct recipients_obj {
 -    zend_object zo;
 +typedef struct _recipients_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPRecipientsObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPRecipientsObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} recipients_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 -extern zend_class_entry *recipients_class_entry;
 -extern zend_object_handlers recipients_handlers;
 +extern zend_class_entry *recipients_ce;
@@ -4244,8 +4244,8 @@ Index: PHPCadesCPRecipients.h
 +// void recipients_free_storage(void *object TSRMLS_DC);
 +// zend_object_value recipients_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPSignedData.cpp
 ===================================================================
 --- PHPCadesCPSignedData.cpp	(revision 161471)
@@ -4674,7 +4674,7 @@ Index: PHPCadesCPSignedData.cpp
  
 @@ -400,20 +435,22 @@
  PHP_METHOD(CPSignedData, get_Certificates) {
-     boost::shared_ptr<CPPCadesCPCertificatesObject> pVal;
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificatesObject> pVal;
  
 -    sig_dat_obj *obj =
 -        (sig_dat_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -4775,8 +4775,8 @@ Index: PHPCadesCPSignedData.h
 +++ PHPCadesCPSignedData.h	(working copy)
 @@ -5,19 +5,19 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct sig_dat_obj {
 -    zend_object zo;
 +typedef struct _signed_data_obj {
@@ -4785,7 +4785,7 @@ Index: PHPCadesCPSignedData.h
 +    zend_object zobj; /* MUST be the last element */
 +} signed_data_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 -extern zend_class_entry *sig_dat_class_entry;
 -extern zend_object_handlers sig_dat_handlers;
 +extern zend_class_entry *signed_data_ce;
@@ -4796,8 +4796,8 @@ Index: PHPCadesCPSignedData.h
 +// void signed_data_free_storage(void *object TSRMLS_DC);
 +// zend_object_value signed_data_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 -void sig_dat_init(TSRMLS_D);
 +void signed_data_init(TSRMLS_D);
  #endif
@@ -4814,7 +4814,7 @@ Index: PHPCadesCPSignedXML.cpp
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    signed_xml_obj *obj =
 +        (signed_xml_obj *)((char *)zobj - XtOffsetOf(signed_xml_obj, zobj));
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesSignedXMLObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesSignedXMLObject>(
          new CPPCadesSignedXMLObject());
  }
 @@ -13,14 +14,15 @@
@@ -5022,7 +5022,7 @@ Index: PHPCadesCPSignedXML.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 -zend_function_entry sig_xml_methods[] = {
 +zend_function_entry signed_xml_methods[] = {
      PHP_ME(CPSignedXML, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
@@ -5055,17 +5055,17 @@ Index: PHPCadesCPSignedXML.h
 +++ PHPCadesCPSignedXML.h	(working copy)
 @@ -5,20 +5,20 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct sig_xml_obj {
 -    zend_object zo;
 +typedef struct _signed_xml_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesSignedXMLObject> m_pCppCadesImpl;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesSignedXMLObject> m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} signed_xml_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 -extern zend_object_handlers sig_xml_obj_handlers;
 -extern zend_class_entry *sig_xml_ce;
 +extern zend_object_handlers signed_xml_obj_handlers;
@@ -5076,8 +5076,8 @@ Index: PHPCadesCPSignedXML.h
 +// void signed_xml_free_storage(void *object TSRMLS_DC);
 +// zend_object_value signed_xml_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 -void sig_xml_init(TSRMLS_D);
 +void signed_xml_init(TSRMLS_D);
  
@@ -5088,19 +5088,19 @@ Index: PHPCadesCPSigner.cpp
 +++ PHPCadesCPSigner.cpp	(working copy)
 @@ -7,7 +7,9 @@
  
- //Методы
+ //пїЅпїЅпїЅпїЅпїЅпїЅ
  PHP_METHOD(CPSigner, __construct) {
 -    sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    signer_obj *obj =
 +        (signer_obj *)((char *)zobj - XtOffsetOf(signer_obj, zobj));
-     boost::shared_ptr<CPPCadesCPSignerObject> ptr(new CPPCadesCPSignerObject());
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPSignerObject> ptr(new CPPCadesCPSignerObject());
      obj->m_pCppCadesImpl = ptr;
  }
 @@ -14,13 +16,16 @@
  
  PHP_METHOD(CPSigner, get_Certificate) {
-     boost::shared_ptr<CPPCadesCPCertificateObject> ctxt;
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> ctxt;
 -    sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
 +    signer_obj *obj =
@@ -5130,7 +5130,7 @@ Index: PHPCadesCPSigner.cpp
 +    certificate_obj *cobj = (certificate_obj *)((char *)zobj - XtOffsetOf(certificate_obj, zobj));
  
      HR_ERRORCHECK_RETURN(cobj->m_pCppCadesImpl->get_CertContext(ctxt));
-     boost::shared_ptr<CPPCadesCPCertificateObject> pCert(
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> pCert(
 @@ -45,7 +53,9 @@
  PHP_METHOD(CPSigner, get_Options) {
      CAPICOM_CERTIFICATE_INCLUDE_OPTION opt;
@@ -5222,8 +5222,8 @@ Index: PHPCadesCPSigner.cpp
      HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_TSAAddress(CAtlString(str)));
  }
 @@ -118,7 +140,9 @@
-     boost::shared_ptr<CryptoPro::CBlob> pBlob;
-     boost::shared_ptr<CPPCadesCPBlobsObject> ptr;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::CBlob> pBlob;
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPBlobsObject> ptr;
  
 -    sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
@@ -5242,8 +5242,8 @@ Index: PHPCadesCPSigner.cpp
      }
  }
 @@ -141,7 +165,9 @@
-     boost::shared_ptr<CryptoPro::CBlob> pBlob;
-     boost::shared_ptr<CPPCadesCPBlobsObject> ptr;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::CBlob> pBlob;
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPBlobsObject> ptr;
  
 -    sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
@@ -5302,7 +5302,7 @@ Index: PHPCadesCPSigner.cpp
      HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_KeyPin(pin));
  }
  
- //Вспомогательные функции обертки
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_handlers sig_obj_handlers;
 -zend_class_entry *sig_ce;
 +zend_object_handlers signer_obj_handlers;
@@ -5388,7 +5388,7 @@ Index: PHPCadesCPSigner.h
 -struct sig_obj {
 -    zend_object zo;
 +typedef struct _signer_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPSignerObject> m_pCppCadesImpl;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPSignerObject> m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} signer_obj;
@@ -5402,8 +5402,8 @@ Index: PHPCadesCPSigner.h
 -zend_object_value sig_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void sig_free_storage(void *object TSRMLS_DC);
 +// zend_object* sig_create_handler(zend_class_entry *type TSRMLS_DC);
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  void sig_init(TSRMLS_D);
 Index: PHPCadesCPSigners.cpp
 ===================================================================
@@ -5422,7 +5422,7 @@ Index: PHPCadesCPSigners.cpp
  
 @@ -22,24 +23,23 @@
  
-     boost::shared_ptr<CPPCadesCPSignerObject> pVal;
+     NS_SHARED_PTR::shared_ptr<CPPCadesCPSignerObject> pVal;
  
 +    zend_object *zobj = Z_OBJ_P(getThis());
      signers_obj *obj =
@@ -5505,17 +5505,17 @@ Index: PHPCadesCPSigners.h
 +++ PHPCadesCPSigners.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct signers_obj {
 -    zend_object zo;
 +typedef struct _signers_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPSignersObject> m_pCppCadesImpl;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPSignersObject> m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} signers_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_class_entry *signers_ce;
  extern zend_object_handlers signers_obj_handlers;
  
@@ -5524,8 +5524,8 @@ Index: PHPCadesCPSigners.h
 +// void signers_free_storage(void *object TSRMLS_DC);
 +// zend_object* signers_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesCPStore.cpp
 ===================================================================
 --- PHPCadesCPStore.cpp	(revision 161471)
@@ -5539,7 +5539,7 @@ Index: PHPCadesCPStore.cpp
 -        (store_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (store_obj *)((char *)zobj - XtOffsetOf(store_obj, zobj));
      obj->m_pCppCadesImpl =
-         boost::shared_ptr<CPPCadesCPStoreObject>(new CPPCadesCPStoreObject());
+         NS_SHARED_PTR::shared_ptr<CPPCadesCPStoreObject>(new CPPCadesCPStoreObject());
  }
 @@ -20,7 +21,7 @@
      long lLocation;
@@ -5655,7 +5655,7 @@ Index: PHPCadesCPStore.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -132,4 +122,6 @@
      memcpy(&store_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -5669,35 +5669,35 @@ Index: PHPCadesCPStore.h
 +++ PHPCadesCPStore.h	(working copy)
 @@ -4,22 +4,22 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct store_obj {
 -    zend_object zo;
 +typedef struct _store_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPStoreObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPStoreObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} store_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers store_obj_handlers;
  extern zend_class_entry *store_ce;
  
--//функция освобождения памяти. используется при уничтожении объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void store_free_storage(void *object TSRMLS_DC);
-+// //функция освобождения памяти. используется при уничтожении объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// void store_free_storage(void *object TSRMLS_DC);
  
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value store_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value store_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesSymmetricAlgorithm.cpp
 ===================================================================
 --- PHPCadesSymmetricAlgorithm.cpp	(revision 161471)
@@ -5712,7 +5712,7 @@ Index: PHPCadesSymmetricAlgorithm.cpp
 -                                                                TSRMLS_CC);
 +        (symmetric_algorithm_obj *)((char *)zobj - XtOffsetOf(symmetric_algorithm_obj, zobj));
 +
-     obj->m_pCppCadesImpl = boost::shared_ptr<CPPCadesSymmetricAlgorithmObject>(
+     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesSymmetricAlgorithmObject>(
          new CPPCadesSymmetricAlgorithmObject());
  }
 @@ -16,29 +17,31 @@
@@ -5839,7 +5839,7 @@ Index: PHPCadesSymmetricAlgorithm.cpp
  }
  
  PHP_METHOD(SymmetricAlgorithm, DiversifyKey) {
-     boost::shared_ptr<CPPCadesSymmetricAlgorithmObject> pVal;
+     NS_SHARED_PTR::shared_ptr<CPPCadesSymmetricAlgorithmObject> pVal;
  
 +    zend_object *zobj = Z_OBJ_P(getThis());
      symmetric_algorithm_obj *obj =
@@ -5979,7 +5979,7 @@ Index: PHPCadesSymmetricAlgorithm.cpp
 +    return &obj->zobj;
  }
  
- //связывание методов класса в function entry
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ function entry
 @@ -251,4 +246,6 @@
      memcpy(&symmetric_algorithm_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -5993,36 +5993,36 @@ Index: PHPCadesSymmetricAlgorithm.h
 +++ PHPCadesSymmetricAlgorithm.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //объявление структуры, которая свяжет объект оборачиваемого класса
- //с объектом php
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+ //пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ php
 -struct symmetric_algorithm_obj {
 -    zend_object zo;
 +typedef struct _symmetric_algorithm_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesSymmetricAlgorithmObject>
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesSymmetricAlgorithmObject>
          m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} symmetric_algorithm_obj;
  
- //хэндлеры для обработки объектов оборачиваемого класса
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
  extern zend_object_handlers symmetric_algorithm_obj_handlers;
 @@ -16,11 +16,11 @@
  extern zend_class_entry *symmetric_algorithm_ce;
  
- //функция освобождения памяти. используется при уничтожении объектов
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -void symmetric_algorithm_free_storage(void *object TSRMLS_DC);
--//функция создания хэндлера для нового объекта класса. используется при
--//создании новых объектов
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+-//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 -zend_object_value symmetric_algorithm_create_handler(zend_class_entry *type
 -                                                         TSRMLS_DC);
 +// void symmetric_algorithm_free_storage(void *object TSRMLS_DC);
-+// //функция создания хэндлера для нового объекта класса. используется при
-+// //создании новых объектов
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
++// //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 +// zend_object_value symmetric_algorithm_create_handler(zend_class_entry *type
 +//                                                          TSRMLS_DC);
  
- //функция инициализации класса. должна включаться в
- //функцию, инициализации модуля
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
+ //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 Index: PHPCadesVersion.cpp
 ===================================================================
 --- PHPCadesVersion.cpp	(revision 161471)
@@ -6037,7 +6037,7 @@ Index: PHPCadesVersion.cpp
 -        (version_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +        (version_obj *)((char *)zobj - XtOffsetOf(version_obj, zobj));
      obj->m_pCppCadesImpl =
-         boost::shared_ptr<CPPVersionObject>(new CPPVersionObject());
+         NS_SHARED_PTR::shared_ptr<CPPVersionObject>(new CPPVersionObject());
  }
 @@ -14,8 +16,10 @@
  
@@ -6153,7 +6153,7 @@ Index: PHPCadesVersion.h
 -struct version_obj {
 -    zend_object zo;
 +typedef struct _version_obj {
-     boost::shared_ptr<CryptoPro::PKI::CAdES::CPPVersionObject> m_pCppCadesImpl;
+     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPVersionObject> m_pCppCadesImpl;
 -};
 +    zend_object zobj; /* MUST be the last element */
 +} version_obj;
@@ -6218,8 +6218,8 @@ Index: stdafx.h
 +
 +
  #include <iostream>
- #include <memory> //Этот хедер тут нужен что бы компилить с новыми версиями libstdc++
-                   //в них есть конфликт с __in и __out макросами которые определены в MS хедерах.
+ #include <memory> //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ libstdc++
+                   //пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ __in пїЅ __out пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ MS пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 @@ -82,7 +97,7 @@
      str = (char *)ecalloc(len + 1, sizeof(char));\
      wcstombs(str, atlstr, len);\
@@ -6264,4 +6264,4 @@ Index: stdafx.h
 +    RETURN_STRING(str)\
      }
  
- #ifdef UNIX //разные макросы ибо на линуксе нет  _vscwprintf() который нужен внутри AppendFormat().
+ #ifdef UNIX //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ  _vscwprintf() пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ AppendFormat().
