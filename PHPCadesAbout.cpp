@@ -3,9 +3,9 @@
 #include "PHPCadesVersion.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//������ ���������� ���������
+//Полное объявление структуры
 
-//������
+//Методы
 PHP_METHOD(About, __construct) {
     about_obj *obj =
         (about_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -90,7 +90,7 @@ PHP_METHOD(About, CSPVersion) {
     pCSPVersion->m_pCppCadesImpl = version;
 }
 
-//��������������� ������� �������
+//Вспомогательные функции обертки
 zend_object_handlers about_obj_handlers;
 zend_class_entry *about_ce;
 
@@ -129,7 +129,7 @@ zend_object_value about_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry about_methods[] = {
     PHP_ME(About, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(About, get_MajorVersion, NULL, ZEND_ACC_PUBLIC)

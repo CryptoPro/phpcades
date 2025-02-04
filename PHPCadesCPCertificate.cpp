@@ -9,7 +9,7 @@
 #include "PHPCadesCPCertificateStatus.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//������
+//Методы
 PHP_METHOD(CPCertificate, __construct) {
     cert_obj *obj =
         (cert_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -125,7 +125,7 @@ PHP_METHOD(CPCertificate, Export) {
     str = (char *)ecalloc(len, sizeof(char));
     memcpy(str, value.pbData(), len);
 
-    RETURN_STRINGL(str, len - 2 , 0); //������� ������� ������ ����� php ����� ����� ��������� � ����������
+    RETURN_STRINGL(str, len - 2 , 0); //удаляем перевод строки иначе php будет мусор оставлять в переменных
 }
 
 PHP_METHOD(CPCertificate, Import) {
@@ -256,7 +256,7 @@ PHP_METHOD(CPCertificate, BasicConstraints) {
         obj->m_pCppCadesImpl->BasicConstraints(bcobj->m_pCppCadesImpl));
 }
 
-//��������������� ������� �������
+//Вспомогательные функции обертки
 zend_object_handlers cert_obj_handlers;
 zend_class_entry *cert_ce;
 
@@ -295,7 +295,7 @@ zend_object_value cert_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry cert_methods[] = {
     PHP_ME(CPCertificate, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPCertificate, GetInfo, NULL, ZEND_ACC_PUBLIC)

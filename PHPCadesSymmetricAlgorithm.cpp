@@ -227,7 +227,7 @@ zend_object_value symmetric_algorithm_create_handler(zend_class_entry *type
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry symmetric_algorithm_methods[] = {
     PHP_ME(SymmetricAlgorithm, __construct, NULL,
            ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)

@@ -441,14 +441,14 @@ PHP_MINIT_FUNCTION(php_cpcsp) {
 
 zend_module_entry php_cpcsp_module_entry = {
     STANDARD_MODULE_HEADER, // #if ZEND_MODULE_API_NO >",  20010901
-    "php_CPCSP",            // название модуля
-    NULL, // указываем экспортируемые функции
+    "php_CPCSP",            // РЅР°Р·РІР°РЅРёРµ РјРѕРґСѓР»СЏ
+    NULL, // СѓРєР°Р·С‹РІР°РµРј СЌРєСЃРїРѕСЂС‚РёСЂСѓРµРјС‹Рµ С„СѓРЅРєС†РёРё
     PHP_MINIT(php_cpcsp), // PHP_MINIT(test), Module Initialization
     NULL,                 // PHP_MSHUTDOWN(test), Module Shutdown
     NULL,                 // PHP_RINIT(test), Request Initialization
     NULL,                 // PHP_RSHUTDOWN(test), Request Shutdown
-    NULL,                 // PHP_MINFO(test), Module Info (для phpinfo())
-    "0.1",                // версия нашего модуля
+    NULL,                 // PHP_MINFO(test), Module Info (РґР»СЏ phpinfo())
+    "0.1",                // РІРµСЂСЃРёСЏ РЅР°С€РµРіРѕ РјРѕРґСѓР»СЏ
     STANDARD_MODULE_PROPERTIES};
 
 ZEND_GET_MODULE(php_cpcsp)

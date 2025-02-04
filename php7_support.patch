@@ -4,7 +4,7 @@ Index: PHPCadesAbout.cpp
 +++ PHPCadesAbout.cpp	(working copy)
 @@ -7,8 +7,9 @@
  
- //������
+ //Методы
  PHP_METHOD(About, __construct) {
 +    zend_object *zobj = Z_OBJ_P(getThis());
      about_obj *obj =
@@ -157,7 +157,7 @@ Index: PHPCadesAbout.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -147,4 +143,6 @@
      memcpy(&about_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -171,8 +171,8 @@ Index: PHPCadesAbout.h
 +++ PHPCadesAbout.h	(working copy)
 @@ -6,11 +6,11 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct about_obj {
 -    zend_object zo;
 +typedef struct _about_obj {
@@ -182,24 +182,24 @@ Index: PHPCadesAbout.h
 +    zend_object zobj; /* MUST be the last element */
 +} about_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers about_obj_handlers;
 @@ -18,11 +18,11 @@
  extern zend_class_entry *about_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void about_free_storage(void *object TSRMLS_DC);
 +// void about_free_storage(void *object TSRMLS_DC);
  
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value about_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value about_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPAlgorithm.cpp
 ===================================================================
 --- PHPCadesCPAlgorithm.cpp	(revision 161471)
@@ -310,7 +310,7 @@ Index: PHPCadesCPAlgorithm.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -104,8 +92,9 @@
      PHP_ME(CPAlgorithm, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
      PHP_ME(CPAlgorithm, get_Name, NULL, ZEND_ACC_PUBLIC)
@@ -336,8 +336,8 @@ Index: PHPCadesCPAlgorithm.h
 +++ PHPCadesCPAlgorithm.h	(working copy)
 @@ -5,21 +5,21 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct algo_obj {
 -    zend_object zo;
 +typedef struct _algo_obj {
@@ -346,31 +346,31 @@ Index: PHPCadesCPAlgorithm.h
 +    zend_object zobj; /* MUST be the last element */
 +} algo_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers algo_obj_handlers;
  extern zend_class_entry *algo_ce;
  
--//������� ������������ ������. ������������ ��� ����������� ��������
+-//функция освобождения памяти. используется при уничтожении объектов
 -void algo_free_storage(void *object TSRMLS_DC);
-+// //������� ������������ ������. ������������ ��� ����������� ��������
++// //функция освобождения памяти. используется при уничтожении объектов
 +// void algo_free_storage(void *object TSRMLS_DC);
  
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value algo_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value algo_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPAttribute.cpp
 ===================================================================
 --- PHPCadesCPAttribute.cpp	(revision 161471)
 +++ PHPCadesCPAttribute.cpp	(working copy)
 @@ -5,8 +5,9 @@
  
- //������
+ //Методы
  PHP_METHOD(CPAttribute, __construct) {
 -    attr_obj *obj =
 -        (attr_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -526,7 +526,7 @@ Index: PHPCadesCPAttribute.cpp
 @@ -151,42 +163,25 @@
  }
  
- //��������������� ������� �������
+ //Вспомогательные функции обертки
 -zend_object_handlers attr_obj_handlers;
 -zend_class_entry *attr_ce;
 +zend_object_handlers attribute_obj_handlers;
@@ -578,7 +578,7 @@ Index: PHPCadesCPAttribute.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -205,9 +200,11 @@
  void attr_init(TSRMLS_D) {
      zend_class_entry ce;
@@ -601,8 +601,8 @@ Index: PHPCadesCPAttribute.h
 +++ PHPCadesCPAttribute.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct attr_obj {
 -    zend_object zo;
 +typedef struct _attribute_obj {
@@ -621,8 +621,8 @@ Index: PHPCadesCPAttribute.h
 -zend_object_value attr_create_handler(zend_class_entry *type TSRMLS_DC);
 +// // void attr_free_storage(void *object TSRMLS_DC);
 +// zend_object_value attr_create_handler(zend_class_entry *type TSRMLS_DC);
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
  void attr_init(TSRMLS_D);
 Index: PHPCadesCPAttributes.cpp
 ===================================================================
@@ -630,7 +630,7 @@ Index: PHPCadesCPAttributes.cpp
 +++ PHPCadesCPAttributes.cpp	(working copy)
 @@ -5,8 +5,9 @@
  
- //������
+ //Методы
  PHP_METHOD(CPAttributes, __construct) {
 -    attr_col *obj =
 -        (attr_col *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -737,7 +737,7 @@ Index: PHPCadesCPAttributes.cpp
          aobj->m_pCppCadesImpl->get_CryptAttributesStruct()));
  }
  
- //��������������� ������� �������
+ //Вспомогательные функции обертки
 -zend_class_entry *attr_col_ce;
 -zend_object_handlers attr_col_handlers;
 +zend_class_entry *attributes_col_ce;
@@ -789,7 +789,7 @@ Index: PHPCadesCPAttributes.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 -zend_function_entry attr_col_methods[] = {
 +zend_function_entry attributes_col_obj_methods[] = {
      PHP_ME(CPAttributes, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
@@ -819,8 +819,8 @@ Index: PHPCadesCPAttributes.h
 +++ PHPCadesCPAttributes.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct attr_col {
 -    zend_object zo;
 +typedef struct _attributes_col_obj {
@@ -840,8 +840,8 @@ Index: PHPCadesCPAttributes.h
 +// void attr_col_free_storage(void *object TSRMLS_DC);
 +// zend_object_value attr_col_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPBasicConstraints.cpp
 ===================================================================
 --- PHPCadesCPBasicConstraints.cpp	(revision 161471)
@@ -986,7 +986,7 @@ Index: PHPCadesCPBasicConstraints.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -150,4 +139,6 @@
      memcpy(&basic_constr_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -1000,8 +1000,8 @@ Index: PHPCadesCPBasicConstraints.h
 +++ PHPCadesCPBasicConstraints.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct basic_constr_obj {
 -    zend_object zo;
 +typedef struct _basic_constr_obj {
@@ -1011,23 +1011,23 @@ Index: PHPCadesCPBasicConstraints.h
 +    zend_object zobj; /* MUST be the last element */
 +} basic_constr_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers basic_constr_obj_handlers;
 @@ -16,10 +16,10 @@
  extern zend_class_entry *basic_constr_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void basic_constr_free_storage(void *object TSRMLS_DC);
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value basic_constr_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void basic_constr_free_storage(void *object TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value basic_constr_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPCardholderData.cpp
 ===================================================================
 --- PHPCadesCPCardholderData.cpp	(revision 161471)
@@ -1215,7 +1215,7 @@ Index: PHPCadesCPCardholderData.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -169,4 +176,6 @@
      memcpy(&chd_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -1229,8 +1229,8 @@ Index: PHPCadesCPCardholderData.h
 +++ PHPCadesCPCardholderData.h	(working copy)
 @@ -5,10 +5,10 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct chd_obj {
 -    zend_object zo;
 +typedef struct _chd_obj {
@@ -1239,30 +1239,30 @@ Index: PHPCadesCPCardholderData.h
 +    zend_object zobj; /* MUST be the last element */
 +} chd_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers chd_obj_handlers;
 @@ -15,10 +15,10 @@
  extern zend_class_entry *chd_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void chd_free_storage(void *object TSRMLS_DC);
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value chd_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void chd_free_storage(void *object TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value chd_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPCertificate.cpp
 ===================================================================
 --- PHPCadesCPCertificate.cpp	(revision 161471)
 +++ PHPCadesCPCertificate.cpp	(working copy)
 @@ -11,8 +11,9 @@
  
- //������
+ //Методы
  PHP_METHOD(CPCertificate, __construct) {
 -    cert_obj *obj =
 -        (cert_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -1384,8 +1384,8 @@ Index: PHPCadesCPCertificate.cpp
      str = (char *)ecalloc(len, sizeof(char));
      memcpy(str, value.pbData(), len);
  
--    RETURN_STRINGL(str, len - 2 , 0); //������� ������� ������ ����� php ����� ����� ��������� � ����������
-+    RETURN_STRINGL(str, len - 2); //������� ������� ������ ����� php ����� ����� ��������� � ����������
+-    RETURN_STRINGL(str, len - 2 , 0); //удаляем перевод строки иначе php будет мусор оставлять в переменных
++    RETURN_STRINGL(str, len - 2); //удаляем перевод строки иначе php будет мусор оставлять в переменных
  }
  
  PHP_METHOD(CPCertificate, Import) {
@@ -1548,7 +1548,7 @@ Index: PHPCadesCPCertificate.cpp
 @@ -257,42 +281,25 @@
  }
  
- //��������������� ������� �������
+ //Вспомогательные функции обертки
 -zend_object_handlers cert_obj_handlers;
 +zend_object_handlers certificate_obj_handlers;
  zend_class_entry *cert_ce;
@@ -1599,7 +1599,7 @@ Index: PHPCadesCPCertificate.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -319,10 +326,12 @@
  
  void cert_init(TSRMLS_D) {
@@ -1622,8 +1622,8 @@ Index: PHPCadesCPCertificate.h
 +++ PHPCadesCPCertificate.h	(working copy)
 @@ -5,17 +5,16 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct cert_obj {
 -    zend_object zo;
 +typedef struct _certificate_obj {
@@ -1640,8 +1640,8 @@ Index: PHPCadesCPCertificate.h
 -void cert_free_storage(void *object TSRMLS_DC);
 -zend_object_value cert_create_handler(zend_class_entry *type TSRMLS_DC);
 +// zend_object* cert_create_handler(zend_class_entry *ce TSRMLS_DC);
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
  void cert_init(TSRMLS_D);
 Index: PHPCadesCPCertificateStatus.cpp
 ===================================================================
@@ -1871,7 +1871,7 @@ Index: PHPCadesCPCertificateStatus.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -242,4 +243,6 @@
      memcpy(&certstat_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -1885,8 +1885,8 @@ Index: PHPCadesCPCertificateStatus.h
 +++ PHPCadesCPCertificateStatus.h	(working copy)
 @@ -5,22 +5,22 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct certstat_obj {
 -    zend_object zo;
 +typedef struct _certstat_obj {
@@ -1896,24 +1896,24 @@ Index: PHPCadesCPCertificateStatus.h
 +    zend_object zobj; /* MUST be the last element */
 +} certstat_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers certstat_obj_handlers;
  extern zend_class_entry *certstat_ce;
  
--//������� ������������ ������. ������������ ��� ����������� ��������
+-//функция освобождения памяти. используется при уничтожении объектов
 -void certstat_free_storage(void *object TSRMLS_DC);
-+// //������� ������������ ������. ������������ ��� ����������� ��������
++// //функция освобождения памяти. используется при уничтожении объектов
 +// void certstat_free_storage(void *object TSRMLS_DC);
  
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value certstat_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value certstat_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPCertificates.cpp
 ===================================================================
 --- PHPCadesCPCertificates.cpp	(revision 161471)
@@ -2046,7 +2046,7 @@ Index: PHPCadesCPCertificates.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -179,4 +168,6 @@
      memcpy(&certs_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2060,8 +2060,8 @@ Index: PHPCadesCPCertificates.h
 +++ PHPCadesCPCertificates.h	(working copy)
 @@ -3,11 +3,11 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct certs_obj {
 -    zend_object zo;
 +typedef struct _certs_obj {
@@ -2071,30 +2071,30 @@ Index: PHPCadesCPCertificates.h
 +    zend_object zobj; /* MUST be the last element */
 +} certs_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers certs_obj_handlers;
 @@ -14,11 +14,11 @@
  extern zend_class_entry *certs_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void certs_free_storage(void *object TSRMLS_DC);
 +// void certs_free_storage(void *object TSRMLS_DC);
  
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value certs_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value certs_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPEKU.cpp
 ===================================================================
 --- PHPCadesCPEKU.cpp	(revision 161471)
 +++ PHPCadesCPEKU.cpp	(working copy)
 @@ -5,7 +5,9 @@
- //������
+ //Методы
  PHP_METHOD(CPEKU, __construct) {
  
 -    eku_obj *obj = (eku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -2213,7 +2213,7 @@ Index: PHPCadesCPEKU.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -112,4 +105,6 @@
      memcpy(&eku_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2227,8 +2227,8 @@ Index: PHPCadesCPEKU.h
 +++ PHPCadesCPEKU.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct eku_obj {
 -    zend_object zo;
 +typedef struct _eku_obj {
@@ -2237,7 +2237,7 @@ Index: PHPCadesCPEKU.h
 +    zend_object zobj; /* MUST be the last element */
 +} eku_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers eku_obj_handlers;
  extern zend_class_entry *eku_ce;
  
@@ -2246,15 +2246,15 @@ Index: PHPCadesCPEKU.h
 +// void eku_free_storage(void *object TSRMLS_DC);
 +// zend_object_value item_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPEKUs.cpp
 ===================================================================
 --- PHPCadesCPEKUs.cpp	(revision 161471)
 +++ PHPCadesCPEKUs.cpp	(working copy)
 @@ -5,7 +5,9 @@
  
- //������
+ //Методы
  PHP_METHOD(CPEKUs, __construct) {
 -    eku_col *obj = (eku_col *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
@@ -2330,7 +2330,7 @@ Index: PHPCadesCPEKUs.cpp
      HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->Remove(idx));
  }
  
- //��������������� ������� �������
+ //Вспомогательные функции обертки
  zend_class_entry *eku_col_ce;
 -zend_object_handlers eku_col_handlers;
 +zend_object_handlers eku_col_obj_handlers;
@@ -2381,7 +2381,7 @@ Index: PHPCadesCPEKUs.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -117,7 +114,9 @@
      INIT_CLASS_ENTRY(ce, "CPEKUs", eku_col_methods);
      eku_col_ce = zend_register_internal_class(&ce TSRMLS_CC);
@@ -2400,8 +2400,8 @@ Index: PHPCadesCPEKUs.h
 +++ PHPCadesCPEKUs.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct eku_col {
 -    zend_object zo;
 +typedef struct _eku_col_obj {
@@ -2419,8 +2419,8 @@ Index: PHPCadesCPEKUs.h
 +// void eku_col_free_storage(void *object TSRMLS_DC);
 +// zend_object_value eku_col_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPEncodedData.cpp
 ===================================================================
 --- PHPCadesCPEncodedData.cpp	(revision 161471)
@@ -2517,7 +2517,7 @@ Index: PHPCadesCPEncodedData.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -106,4 +90,6 @@
      memcpy(&encoded_data_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2531,8 +2531,8 @@ Index: PHPCadesCPEncodedData.h
 +++ PHPCadesCPEncodedData.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct encoded_data_obj {
 -    zend_object zo;
 +typedef struct _encoded_data_obj {
@@ -2542,23 +2542,23 @@ Index: PHPCadesCPEncodedData.h
 +    zend_object zobj; /* MUST be the last element */
 +} encoded_data_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers encoded_data_obj_handlers;
 @@ -16,10 +16,10 @@
  extern zend_class_entry *encoded_data_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void encoded_data_free_storage(void *object TSRMLS_DC);
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value encoded_data_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void encoded_data_free_storage(void *object TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value encoded_data_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPEnvelopedData.cpp
 ===================================================================
 --- PHPCadesCPEnvelopedData.cpp	(revision 161471)
@@ -2731,7 +2731,7 @@ Index: PHPCadesCPEnvelopedData.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -171,4 +162,6 @@
      memcpy(&enveloped_data_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2745,8 +2745,8 @@ Index: PHPCadesCPEnvelopedData.h
 +++ PHPCadesCPEnvelopedData.h	(working copy)
 @@ -5,10 +5,10 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct enveloped_data_obj {
 -    zend_object zo;
 +typedef struct _enveloped_data_obj {
@@ -2755,25 +2755,25 @@ Index: PHPCadesCPEnvelopedData.h
 +    zend_object zobj; /* MUST be the last element */
 +} enveloped_data_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers enveloped_data_obj_handlers;
 @@ -15,11 +15,11 @@
  extern zend_class_entry *enveloped_data_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void enveloped_data_free_storage(void *object TSRMLS_DC);
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value enveloped_data_create_handler(zend_class_entry *type
 -                                                    TSRMLS_DC);
 +// void enveloped_data_free_storage(void *object TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value enveloped_data_create_handler(zend_class_entry *type
 +//                                                     TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPExtendedKeyUsage.cpp
 ===================================================================
 --- PHPCadesCPExtendedKeyUsage.cpp	(revision 161471)
@@ -2883,7 +2883,7 @@ Index: PHPCadesCPExtendedKeyUsage.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -101,4 +88,6 @@
      memcpy(&exku_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -2897,8 +2897,8 @@ Index: PHPCadesCPExtendedKeyUsage.h
 +++ PHPCadesCPExtendedKeyUsage.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct exku_obj {
 -    zend_object zo;
 +typedef struct _exku_obj {
@@ -2908,22 +2908,22 @@ Index: PHPCadesCPExtendedKeyUsage.h
 +    zend_object zobj; /* MUST be the last element */
 +} exku_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers exku_obj_handlers;
 @@ -16,11 +16,11 @@
  extern zend_class_entry *exku_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void exku_free_storage(void *object TSRMLS_DC);
 +// void exku_free_storage(void *object TSRMLS_DC);
  
- //������� �������� �������� ��� ������ ������� ������. ������������ ���
- //�������� ����� ��������
+ //функция создания хэндлера для нового объекта класса. используется при
+ //создании новых объектов
 -zend_object_value exku_create_handler(zend_class_entry *type TSRMLS_DC);
 +// zend_object_value exku_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPHashedData.cpp
 ===================================================================
 --- PHPCadesCPHashedData.cpp    (revision 189859)
@@ -3152,8 +3152,8 @@ Index: PHPCadesCPHashedData.h
 +++ PHPCadesCPHashedData.h  (working copy)
 @@ -5,21 +5,21 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct hash_dat_obj {
 -    zend_object zo;
 +typedef struct hashed_data_obj {
@@ -3163,7 +3163,7 @@ Index: PHPCadesCPHashedData.h
 +    zend_object zobj; /* MUST be the last element */
 +} hashed_data_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
 -extern zend_class_entry *hash_dat_class_entry;
 -extern zend_object_handlers hash_dat_handlers;
 +extern zend_class_entry *hashed_data_ce;
@@ -3174,8 +3174,8 @@ Index: PHPCadesCPHashedData.h
 +// void hashed_data_free_storage(void *object TSRMLS_DC);
 +// zend_object_value hashed_data_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 -void hash_dat_init(TSRMLS_D);
 +void hashed_data_init(TSRMLS_D);
  
@@ -3354,7 +3354,7 @@ Index: PHPCadesCPKeyUsage.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -206,8 +201,8 @@
      PHP_ME(CPKeyUsage, get_IsKeyCertSignEnabled, NULL, ZEND_ACC_PUBLIC)
      PHP_ME(CPKeyUsage, get_IsCRLSignEnabled, NULL, ZEND_ACC_PUBLIC)
@@ -3379,8 +3379,8 @@ Index: PHPCadesCPKeyUsage.h
 +++ PHPCadesCPKeyUsage.h	(working copy)
 @@ -5,10 +5,10 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct ku_obj {
 -    zend_object zo;
 +typedef struct _ku_obj {
@@ -3389,24 +3389,24 @@ Index: PHPCadesCPKeyUsage.h
 +    zend_object zobj; /* MUST be the last element */
 +} ku_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers ku_obj_handlers;
 @@ -15,11 +15,11 @@
  extern zend_class_entry *ku_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void ku_free_storage(void *object TSRMLS_DC);
 +// void ku_free_storage(void *object TSRMLS_DC);
  
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value ku_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value ku_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPOID.cpp
 ===================================================================
 --- PHPCadesCPOID.cpp	(revision 161471)
@@ -3504,7 +3504,7 @@ Index: PHPCadesCPOID.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -94,4 +81,6 @@
      memcpy(&oid_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -3518,8 +3518,8 @@ Index: PHPCadesCPOID.h
 +++ PHPCadesCPOID.h	(working copy)
 @@ -5,10 +5,10 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct oid_obj {
 -    zend_object zo;
 +typedef struct _oid_obj {
@@ -3528,23 +3528,23 @@ Index: PHPCadesCPOID.h
 +    zend_object zobj; /* MUST be the last element */
 +} oid_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers oid_obj_handlers;
 @@ -15,10 +15,10 @@
  extern zend_class_entry *oid_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void oid_free_storage(void *object TSRMLS_DC);
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value oid_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void oid_free_storage(void *object TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value oid_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPPrivateKey.cpp
 ===================================================================
 --- PHPCadesCPPrivateKey.cpp	(revision 161471)
@@ -3665,7 +3665,7 @@ Index: PHPCadesCPPrivateKey.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -123,4 +112,6 @@
      memcpy(&private_key_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -3679,8 +3679,8 @@ Index: PHPCadesCPPrivateKey.h
 +++ PHPCadesCPPrivateKey.h	(working copy)
 @@ -5,21 +5,21 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct private_key_obj {
 -    zend_object zo;
 +typedef struct _private_key_obj {
@@ -3690,23 +3690,23 @@ Index: PHPCadesCPPrivateKey.h
 +    zend_object zobj; /* MUST be the last element */
 +} private_key_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers private_key_obj_handlers;
  extern zend_class_entry *private_key_ce;
  
--//������� ������������ ������. ������������ ��� ����������� ��������
+-//функция освобождения памяти. используется при уничтожении объектов
 -void private_key_free_storage(void *object TSRMLS_DC);
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value private_key_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //������� ������������ ������. ������������ ��� ����������� ��������
++// //функция освобождения памяти. используется при уничтожении объектов
 +// void private_key_free_storage(void *object TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value private_key_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPPublicKey.cpp
 ===================================================================
 --- PHPCadesCPPublicKey.cpp	(revision 161471)
@@ -3834,7 +3834,7 @@ Index: PHPCadesCPPublicKey.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -103,8 +93,8 @@
      PHP_ME(CPPublicKey, get_Algorithm, NULL, ZEND_ACC_PUBLIC)
      PHP_ME(CPPublicKey, get_Length, NULL, ZEND_ACC_PUBLIC)
@@ -3859,8 +3859,8 @@ Index: PHPCadesCPPublicKey.h
 +++ PHPCadesCPPublicKey.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct public_key_obj {
 -    zend_object zo;
 +typedef struct _public_key_obj {
@@ -3870,23 +3870,23 @@ Index: PHPCadesCPPublicKey.h
 +    zend_object zobj; /* MUST be the last element */
 +} public_key_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers public_key_obj_handlers;
 @@ -16,10 +16,10 @@
  extern zend_class_entry *public_key_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void public_key_free_storage(void *object TSRMLS_DC);
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value public_key_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void public_key_free_storage(void *object TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value public_key_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPRawSignature.cpp
 ===================================================================
 --- PHPCadesCPRawSignature.cpp	(revision 161471)
@@ -4041,8 +4041,8 @@ Index: PHPCadesCPRawSignature.h
 +++ PHPCadesCPRawSignature.h	(working copy)
 @@ -5,18 +5,18 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct raw_sig_obj {
 -    zend_object zo;
 +typedef struct _raw_sig_obj {
@@ -4052,7 +4052,7 @@ Index: PHPCadesCPRawSignature.h
 +    zend_object zobj; /* MUST be the last element */
 +} raw_sig_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
 -extern zend_class_entry *raw_sig_class_entry;
 -extern zend_object_handlers raw_sig_handlers;
 +extern zend_class_entry *raw_sig_ce;
@@ -4063,8 +4063,8 @@ Index: PHPCadesCPRawSignature.h
 +// void raw_sig_free_storage(void *object TSRMLS_DC);
 +// zend_object_value raw_sig_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPRecipients.cpp
 ===================================================================
 --- PHPCadesCPRecipients.cpp	(revision 161471)
@@ -4222,8 +4222,8 @@ Index: PHPCadesCPRecipients.h
 +++ PHPCadesCPRecipients.h	(working copy)
 @@ -5,18 +5,18 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct recipients_obj {
 -    zend_object zo;
 +typedef struct _recipients_obj {
@@ -4233,7 +4233,7 @@ Index: PHPCadesCPRecipients.h
 +    zend_object zobj; /* MUST be the last element */
 +} recipients_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
 -extern zend_class_entry *recipients_class_entry;
 -extern zend_object_handlers recipients_handlers;
 +extern zend_class_entry *recipients_ce;
@@ -4244,8 +4244,8 @@ Index: PHPCadesCPRecipients.h
 +// void recipients_free_storage(void *object TSRMLS_DC);
 +// zend_object_value recipients_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPSignedData.cpp
 ===================================================================
 --- PHPCadesCPSignedData.cpp	(revision 161471)
@@ -4775,8 +4775,8 @@ Index: PHPCadesCPSignedData.h
 +++ PHPCadesCPSignedData.h	(working copy)
 @@ -5,19 +5,19 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct sig_dat_obj {
 -    zend_object zo;
 +typedef struct _signed_data_obj {
@@ -4785,7 +4785,7 @@ Index: PHPCadesCPSignedData.h
 +    zend_object zobj; /* MUST be the last element */
 +} signed_data_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
 -extern zend_class_entry *sig_dat_class_entry;
 -extern zend_object_handlers sig_dat_handlers;
 +extern zend_class_entry *signed_data_ce;
@@ -4796,8 +4796,8 @@ Index: PHPCadesCPSignedData.h
 +// void signed_data_free_storage(void *object TSRMLS_DC);
 +// zend_object_value signed_data_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 -void sig_dat_init(TSRMLS_D);
 +void signed_data_init(TSRMLS_D);
  #endif
@@ -5022,7 +5022,7 @@ Index: PHPCadesCPSignedXML.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 -zend_function_entry sig_xml_methods[] = {
 +zend_function_entry signed_xml_methods[] = {
      PHP_ME(CPSignedXML, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
@@ -5055,8 +5055,8 @@ Index: PHPCadesCPSignedXML.h
 +++ PHPCadesCPSignedXML.h	(working copy)
 @@ -5,20 +5,20 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct sig_xml_obj {
 -    zend_object zo;
 +typedef struct _signed_xml_obj {
@@ -5065,7 +5065,7 @@ Index: PHPCadesCPSignedXML.h
 +    zend_object zobj; /* MUST be the last element */
 +} signed_xml_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
 -extern zend_object_handlers sig_xml_obj_handlers;
 -extern zend_class_entry *sig_xml_ce;
 +extern zend_object_handlers signed_xml_obj_handlers;
@@ -5076,8 +5076,8 @@ Index: PHPCadesCPSignedXML.h
 +// void signed_xml_free_storage(void *object TSRMLS_DC);
 +// zend_object_value signed_xml_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 -void sig_xml_init(TSRMLS_D);
 +void signed_xml_init(TSRMLS_D);
  
@@ -5088,7 +5088,7 @@ Index: PHPCadesCPSigner.cpp
 +++ PHPCadesCPSigner.cpp	(working copy)
 @@ -7,7 +7,9 @@
  
- //������
+ //Методы
  PHP_METHOD(CPSigner, __construct) {
 -    sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
 +    zend_object *zobj = Z_OBJ_P(getThis());
@@ -5302,7 +5302,7 @@ Index: PHPCadesCPSigner.cpp
      HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_KeyPin(pin));
  }
  
- //��������������� ������� �������
+ //Вспомогательные функции обертки
 -zend_object_handlers sig_obj_handlers;
 -zend_class_entry *sig_ce;
 +zend_object_handlers signer_obj_handlers;
@@ -5402,8 +5402,8 @@ Index: PHPCadesCPSigner.h
 -zend_object_value sig_create_handler(zend_class_entry *type TSRMLS_DC);
 +// void sig_free_storage(void *object TSRMLS_DC);
 +// zend_object* sig_create_handler(zend_class_entry *type TSRMLS_DC);
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
  void sig_init(TSRMLS_D);
 Index: PHPCadesCPSigners.cpp
 ===================================================================
@@ -5505,8 +5505,8 @@ Index: PHPCadesCPSigners.h
 +++ PHPCadesCPSigners.h	(working copy)
 @@ -5,17 +5,17 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct signers_obj {
 -    zend_object zo;
 +typedef struct _signers_obj {
@@ -5515,7 +5515,7 @@ Index: PHPCadesCPSigners.h
 +    zend_object zobj; /* MUST be the last element */
 +} signers_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_class_entry *signers_ce;
  extern zend_object_handlers signers_obj_handlers;
  
@@ -5524,8 +5524,8 @@ Index: PHPCadesCPSigners.h
 +// void signers_free_storage(void *object TSRMLS_DC);
 +// zend_object* signers_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesCPStore.cpp
 ===================================================================
 --- PHPCadesCPStore.cpp	(revision 161471)
@@ -5655,7 +5655,7 @@ Index: PHPCadesCPStore.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -132,4 +122,6 @@
      memcpy(&store_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -5669,8 +5669,8 @@ Index: PHPCadesCPStore.h
 +++ PHPCadesCPStore.h	(working copy)
 @@ -4,22 +4,22 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct store_obj {
 -    zend_object zo;
 +typedef struct _store_obj {
@@ -5680,24 +5680,24 @@ Index: PHPCadesCPStore.h
 +    zend_object zobj; /* MUST be the last element */
 +} store_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers store_obj_handlers;
  extern zend_class_entry *store_ce;
  
--//������� ������������ ������. ������������ ��� ����������� ��������
+-//функция освобождения памяти. используется при уничтожении объектов
 -void store_free_storage(void *object TSRMLS_DC);
-+// //������� ������������ ������. ������������ ��� ����������� ��������
++// //функция освобождения памяти. используется при уничтожении объектов
 +// void store_free_storage(void *object TSRMLS_DC);
  
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value store_create_handler(zend_class_entry *type TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value store_create_handler(zend_class_entry *type TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesSymmetricAlgorithm.cpp
 ===================================================================
 --- PHPCadesSymmetricAlgorithm.cpp	(revision 161471)
@@ -5979,7 +5979,7 @@ Index: PHPCadesSymmetricAlgorithm.cpp
 +    return &obj->zobj;
  }
  
- //���������� ������� ������ � function entry
+ //связывание методов класса в function entry
 @@ -251,4 +246,6 @@
      memcpy(&symmetric_algorithm_obj_handlers, zend_get_std_object_handlers(),
             sizeof(zend_object_handlers));
@@ -5993,8 +5993,8 @@ Index: PHPCadesSymmetricAlgorithm.h
 +++ PHPCadesSymmetricAlgorithm.h	(working copy)
 @@ -5,11 +5,11 @@
  
- //���������� ���������, ������� ������ ������ �������������� ������
- //� �������� php
+ //объявление структуры, которая свяжет объект оборачиваемого класса
+ //с объектом php
 -struct symmetric_algorithm_obj {
 -    zend_object zo;
 +typedef struct _symmetric_algorithm_obj {
@@ -6004,25 +6004,25 @@ Index: PHPCadesSymmetricAlgorithm.h
 +    zend_object zobj; /* MUST be the last element */
 +} symmetric_algorithm_obj;
  
- //�������� ��� ��������� �������� �������������� ������
+ //хэндлеры для обработки объектов оборачиваемого класса
  extern zend_object_handlers symmetric_algorithm_obj_handlers;
 @@ -16,11 +16,11 @@
  extern zend_class_entry *symmetric_algorithm_ce;
  
- //������� ������������ ������. ������������ ��� ����������� ��������
+ //функция освобождения памяти. используется при уничтожении объектов
 -void symmetric_algorithm_free_storage(void *object TSRMLS_DC);
--//������� �������� �������� ��� ������ ������� ������. ������������ ���
--//�������� ����� ��������
+-//функция создания хэндлера для нового объекта класса. используется при
+-//создании новых объектов
 -zend_object_value symmetric_algorithm_create_handler(zend_class_entry *type
 -                                                         TSRMLS_DC);
 +// void symmetric_algorithm_free_storage(void *object TSRMLS_DC);
-+// //������� �������� �������� ��� ������ ������� ������. ������������ ���
-+// //�������� ����� ��������
++// //функция создания хэндлера для нового объекта класса. используется при
++// //создании новых объектов
 +// zend_object_value symmetric_algorithm_create_handler(zend_class_entry *type
 +//                                                          TSRMLS_DC);
  
- //������� ������������� ������. ������ ���������� �
- //�������, ������������� ������
+ //функция инициализации класса. должна включаться в
+ //функцию, инициализации модуля
 Index: PHPCadesVersion.cpp
 ===================================================================
 --- PHPCadesVersion.cpp	(revision 161471)
@@ -6218,8 +6218,8 @@ Index: stdafx.h
 +
 +
  #include <iostream>
- #include <memory> //���� ����� ��� ����� ��� �� ��������� � ������ �������� libstdc++
-                   //� ��� ���� �������� � __in � __out ��������� ������� ���������� � MS �������.
+ #include <memory> //Этот хедер тут нужен что бы компилить с новыми версиями libstdc++
+                   //в них есть конфликт с __in и __out макросами которые определены в MS хедерах.
 @@ -82,7 +97,7 @@
      str = (char *)ecalloc(len + 1, sizeof(char));\
      wcstombs(str, atlstr, len);\
@@ -6264,4 +6264,4 @@ Index: stdafx.h
 +    RETURN_STRING(str)\
      }
  
- #ifdef UNIX //������ ������� ��� �� ������� ���  _vscwprintf() ������� ����� ������ AppendFormat().
+ #ifdef UNIX //разные макросы ибо на линуксе нет  _vscwprintf() который нужен внутри AppendFormat().

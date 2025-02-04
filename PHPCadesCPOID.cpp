@@ -79,7 +79,7 @@ zend_object_value oid_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry oid_methods[] = {
     PHP_ME(CPOID, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPOID, get_Value, NULL, ZEND_ACC_PUBLIC)

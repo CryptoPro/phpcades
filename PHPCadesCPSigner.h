@@ -13,7 +13,7 @@ extern zend_class_entry *sig_ce;
 
 void sig_free_storage(void *object TSRMLS_DC);
 zend_object_value sig_create_handler(zend_class_entry *type TSRMLS_DC);
-//������� ������������� ������. ������ ���������� �
-//�������, ������������� ������
+//функция инициализации класса. должна включаться в
+//функцию, инициализации модуля
 void sig_init(TSRMLS_D);
 #endif

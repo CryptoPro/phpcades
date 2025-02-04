@@ -18,8 +18,8 @@
 #endif
 
 #include <iostream>
-#include <memory> //���� ����� ��� ����� ��� �� ��������� � ������ �������� libstdc++
-                  //� ��� ���� �������� � __in � __out ��������� ������� ���������� � MS �������.
+#include <memory> //Этот хедер тут нужен что бы компилить с новыми версиями libstdc++
+                  //в них есть конфликт с __in и __out макросами которые определены в MS хедерах.
 
 #ifdef UNIX
     #include "CSP_WinDef.h"
@@ -141,7 +141,7 @@
     RETURN_STRING(str, 0)\
     }
 
-#ifdef UNIX //������ ������� ��� �� ������� ���  _vscwprintf() ������� ����� ������ AppendFormat().
+#ifdef UNIX //разные макросы ибо на линуксе нет  _vscwprintf() который нужен внутри AppendFormat().
 
 #ifdef MAKELANGID
     #undef MAKELANGID

@@ -3,7 +3,7 @@
 #include "PHPCadesCPEKUs.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//������
+//Методы
 PHP_METHOD(CPEKUs, __construct) {
     eku_col *obj = (eku_col *)zend_object_store_get_object(getThis() TSRMLS_CC);
     NS_SHARED_PTR::shared_ptr<CPPCadesCPEKUsObject> ptr(new CPPCadesCPEKUsObject());
@@ -64,7 +64,7 @@ PHP_METHOD(CPEKUs, Remove) {
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->Remove(idx));
 }
 
-//��������������� ������� �������
+//Вспомогательные функции обертки
 zend_class_entry *eku_col_ce;
 zend_object_handlers eku_col_handlers;
 
@@ -103,7 +103,7 @@ zend_object_value eku_col_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry eku_col_methods[] = {
     PHP_ME(CPEKUs, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPEKUs, Add, NULL, ZEND_ACC_PUBLIC)

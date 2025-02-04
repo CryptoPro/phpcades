@@ -169,7 +169,7 @@ zend_object_value sig_xml_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry sig_xml_methods[] = {
     PHP_ME(CPSignedXML, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPSignedXML, set_Content, NULL, ZEND_ACC_PUBLIC)

@@ -164,7 +164,7 @@ zend_object_value certs_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry certs_methods[] = {
     PHP_ME(CPCertificates, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPCertificates, Find, NULL, ZEND_ACC_PUBLIC)
