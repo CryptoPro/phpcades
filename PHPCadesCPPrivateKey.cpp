@@ -71,6 +71,21 @@ PHP_METHOD(CPPrivateKey, get_KeySpec) {
     RETURN_LONG(spec);
 }
 
+PHP_METHOD(CPPrivateKey, set_KeyPin) {
+    char *str;
+    size_t len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "s", &str, &len) ==
+        FAILURE)
+        RETURN_WITH_EXCEPTION(E_INVALIDARG);
+
+    zend_object *zobj = Z_OBJ_P(getThis());
+    private_key_obj *obj =
+        (private_key_obj *)((char *)zobj - XtOffsetOf(private_key_obj, zobj));
+    CAtlStringA pin(CA2CA(CAtlStringA(str), CP_UTF8));
+    HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->set_KeyPin(pin));
+}
+
 zend_object_handlers private_key_obj_handlers;
 zend_class_entry *private_key_ce;
 
@@ -110,6 +125,9 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_cpprivatekey_get_keyspec, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpprivatekey_set_keypin, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
 //связывание методов класса в function entry
 zend_function_entry private_key_methods[] = {
     PHP_ME(CPPrivateKey, __construct, arginfo_cpprivatekey_construct, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
@@ -118,6 +136,7 @@ zend_function_entry private_key_methods[] = {
     PHP_ME(CPPrivateKey, get_ProviderName, arginfo_cpprivatekey_get_providername, ZEND_ACC_PUBLIC)
     PHP_ME(CPPrivateKey, get_ProviderType, arginfo_cpprivatekey_get_providertype, ZEND_ACC_PUBLIC)
     PHP_ME(CPPrivateKey, get_KeySpec, arginfo_cpprivatekey_get_keyspec, ZEND_ACC_PUBLIC)
+    PHP_ME(CPPrivateKey, set_KeyPin, arginfo_cpprivatekey_set_keypin, ZEND_ACC_PUBLIC)
     // PHP_ME(CPPrivateKey, get_UECardholderData,    NULL, ZEND_ACC_PUBLIC)
     // PHP_ME(CPPrivateKey, get_UECardWelcomeText,   NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}};
