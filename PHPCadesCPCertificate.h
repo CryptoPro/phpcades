@@ -5,18 +5,17 @@
 
 //объявление структуры, которая свяжет объект оборачиваемого класса
 //с объектом php
-struct cert_obj {
-    zend_object zo;
+typedef struct _certificate_obj {
     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPCertificateObject>
         m_pCppCadesImpl;
-};
+    zend_object zobj; /* MUST be the last element */
+} certificate_obj;
 
-extern zend_object_handlers cert_obj_handlers;
+extern zend_object_handlers certificate_obj_handlers;
 extern zend_class_entry *cert_ce;
 
-void cert_free_storage(void *object TSRMLS_DC);
-zend_object_value cert_create_handler(zend_class_entry *type TSRMLS_DC);
+// zend_object* cert_create_handler(zend_class_entry *ce );
 //функция инициализации класса. должна включаться в
 //функцию, инициализации модуля
-void cert_init(TSRMLS_D);
+void cert_init(void);
 #endif

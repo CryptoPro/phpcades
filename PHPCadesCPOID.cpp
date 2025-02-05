@@ -3,7 +3,8 @@
 using namespace CryptoPro::PKI::CAdES;
 
 PHP_METHOD(CPOID, __construct) {
-    oid_obj *obj = (oid_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    zend_object *zobj = Z_OBJ_P(getThis());
+    oid_obj *obj = (oid_obj *)((char *)zobj - XtOffsetOf(oid_obj, zobj));
     obj->m_pCppCadesImpl =
         NS_SHARED_PTR::shared_ptr<CPPCadesCPOIDObject>(new CPPCadesCPOIDObject());
 }
@@ -11,7 +12,8 @@ PHP_METHOD(CPOID, __construct) {
 PHP_METHOD(CPOID, get_Value) {
     NS_SHARED_PTR::shared_ptr<CAtlStringA> atl;
 
-    oid_obj *obj = (oid_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    zend_object *zobj = Z_OBJ_P(getThis());
+    oid_obj *obj = (oid_obj *)((char *)zobj - XtOffsetOf(oid_obj, zobj));
 
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_Value(atl));
 
@@ -20,11 +22,12 @@ PHP_METHOD(CPOID, get_Value) {
 
 PHP_METHOD(CPOID, set_Value) {
     char *str;
-    int len;
+    size_t len;
 
-    oid_obj *obj = (oid_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    zend_object *zobj = Z_OBJ_P(getThis());
+    oid_obj *obj = (oid_obj *)((char *)zobj - XtOffsetOf(oid_obj, zobj));
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &str, &len) ==
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "s", &str, &len) ==
         FAILURE)
         RETURN_WITH_EXCEPTION(E_INVALIDARG);
 
@@ -34,7 +37,8 @@ PHP_METHOD(CPOID, set_Value) {
 PHP_METHOD(CPOID, get_FriendlyName) {
     CAtlString atlstr;
 
-    oid_obj *obj = (oid_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    zend_object *zobj = Z_OBJ_P(getThis());
+    oid_obj *obj = (oid_obj *)((char *)zobj - XtOffsetOf(oid_obj, zobj));
 
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_FriendlyName(atlstr));
 
@@ -44,54 +48,53 @@ PHP_METHOD(CPOID, get_FriendlyName) {
 zend_object_handlers oid_obj_handlers;
 zend_class_entry *oid_ce;
 
-void oid_free_storage(void *object TSRMLS_DC) {
-    oid_obj *obj = (oid_obj *)object;
+static void oid_free(zend_object *object ) {
+    oid_obj *obj = (oid_obj *)((char *)object - XtOffsetOf(oid_obj, zobj));
     obj->m_pCppCadesImpl.reset();
 
-    zend_hash_destroy(obj->zo.properties);
-    FREE_HASHTABLE(obj->zo.properties);
-
-    efree(obj);
+    zend_object_std_dtor(object);
 }
 
-zend_object_value oid_create_handler(zend_class_entry *type TSRMLS_DC) {
-    zend_object_value retval;
+static zend_object* oid_create_handler(zend_class_entry *ce ) {
+    oid_obj *obj = (oid_obj *)emalloc(sizeof(oid_obj) + zend_object_properties_size(ce));
+    memset(obj, 0, sizeof(oid_obj) + zend_object_properties_size(ce));
+    
+    zend_object_std_init(&obj->zobj, ce);
+    object_properties_init(&obj->zobj, ce);
+    obj->zobj.handlers = &oid_obj_handlers;
 
-    oid_obj *obj = (oid_obj *)emalloc(sizeof(oid_obj));
-    memset(obj, 0, sizeof(oid_obj));
-    obj->zo.ce = type;
-
-    ALLOC_HASHTABLE(obj->zo.properties);
-    zend_hash_init(obj->zo.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-#if PHP_VERSION_ID < 50399
-    zval *tmp;
-    zend_hash_copy(obj->zo.properties, &(type->default_properties),
-                   (copy_ctor_func_t)zval_add_ref, (void *)&tmp,
-                   sizeof(zval *));
-#else
-    object_properties_init(&obj->zo, type);
-#endif
-
-    retval.handle =
-        zend_objects_store_put(obj, NULL, oid_free_storage, NULL TSRMLS_CC);
-    retval.handlers = &oid_obj_handlers;
-
-    return retval;
+    return &obj->zobj;
 }
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpoid_construct, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpoid_get_value, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpoid_set_value, 0, 0, 1)
+ ZEND_ARG_INFO(0, value)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpoid_get_friendlyname, 0, 0, 0)
+ZEND_END_ARG_INFO()
 
 //связывание методов класса в function entry
 zend_function_entry oid_methods[] = {
-    PHP_ME(CPOID, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-    PHP_ME(CPOID, get_Value, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CPOID, set_Value, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CPOID, get_FriendlyName, NULL, ZEND_ACC_PUBLIC){NULL, NULL, NULL}};
+    PHP_ME(CPOID, __construct, arginfo_cpoid_construct, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    PHP_ME(CPOID, get_Value, arginfo_cpoid_get_value, ZEND_ACC_PUBLIC)
+    PHP_ME(CPOID, set_Value, arginfo_cpoid_set_value, ZEND_ACC_PUBLIC)
+    PHP_ME(CPOID, get_FriendlyName, arginfo_cpoid_get_friendlyname, ZEND_ACC_PUBLIC)
+    {NULL, NULL, NULL}};
 
-void oid_init(TSRMLS_D) {
+void oid_init(void) {
     zend_class_entry ce;
     INIT_CLASS_ENTRY(ce, "CPOID", oid_methods);
-    oid_ce = zend_register_internal_class(&ce TSRMLS_CC);
+    oid_ce = zend_register_internal_class(&ce );
     oid_ce->create_object = oid_create_handler;
     memcpy(&oid_obj_handlers, zend_get_std_object_handlers(),
            sizeof(zend_object_handlers));
     oid_obj_handlers.clone_obj = NULL;
+    oid_obj_handlers.free_obj = oid_free;
+    oid_obj_handlers.offset = XtOffsetOf(oid_obj, zobj);
 }

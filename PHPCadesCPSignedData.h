@@ -5,19 +5,19 @@
 
 //объявление структуры, которая свяжет объект оборачиваемого класса
 //с объектом php
-struct sig_dat_obj {
-    zend_object zo;
+typedef struct _signed_data_obj {
     CryptoPro::PKI::CAdES::CPPCadesSignedDataObject *m_pCppCadesImpl;
-};
+    zend_object zobj; /* MUST be the last element */
+} signed_data_obj;
 
 //хэндлеры для обработки объектов оборачиваемого класса
-extern zend_class_entry *sig_dat_class_entry;
-extern zend_object_handlers sig_dat_handlers;
+extern zend_class_entry *signed_data_ce;
+extern zend_object_handlers signed_data_obj_handlers;
 
-void sig_dat_free_storage(void *object TSRMLS_DC);
-zend_object_value sig_dat_create_handler(zend_class_entry *type TSRMLS_DC);
+// void signed_data_free_storage(void *object );
+// zend_object_value signed_data_create_handler(zend_class_entry *type );
 
 //функция инициализации класса. должна включаться в
 //функцию, инициализации модуля
-void sig_dat_init(TSRMLS_D);
+void signed_data_init(void);
 #endif

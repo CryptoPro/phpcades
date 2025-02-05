@@ -4,16 +4,18 @@
 using namespace CryptoPro::PKI::CAdES;
 
 PHP_METHOD(CPRecipients, Add) {
-    zval *php_var;
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "O", &php_var,
+    zval *recipients_zval;
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &recipients_zval,
                               cert_ce) == FAILURE)
         RETURN_WITH_EXCEPTION(E_INVALIDARG);
 
+    zend_object *zobj = Z_OBJ_P(getThis());
     recipients_obj *obj =
-        (recipients_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        (recipients_obj *)((char *)zobj - XtOffsetOf(recipients_obj, zobj));
 
-    cert_obj *Recipient =
-        (cert_obj *)zend_object_store_get_object(php_var TSRMLS_CC);
+    zobj = Z_OBJ_P(recipients_zval);
+    certificate_obj *Recipient =
+        (certificate_obj *)((char *)zobj - XtOffsetOf(certificate_obj, zobj));
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->Add(Recipient->m_pCppCadesImpl));
 }
 
@@ -21,102 +23,106 @@ PHP_METHOD(CPRecipients, Add) {
 PHP_METHOD(CPRecipients, get_Count) {
     unsigned int value;
 
+    zend_object *zobj = Z_OBJ_P(getThis());
     recipients_obj *obj =
-        (recipients_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        (recipients_obj *)((char *)zobj - XtOffsetOf(recipients_obj, zobj));
 
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_Count(&value));
 
-    RETURN_LONG(value)
+    RETURN_LONG(value);
 }
 
 //ядро метода, которое будет работать на самом деле
 PHP_METHOD(CPRecipients, get_Item) {
     long index;
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &index) ==
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "l", &index) ==
         FAILURE)
         RETURN_WITH_EXCEPTION(E_INVALIDARG);
 
+    zend_object *zobj = Z_OBJ_P(getThis());
     recipients_obj *obj =
-        (recipients_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        (recipients_obj *)((char *)zobj - XtOffsetOf(recipients_obj, zobj));
 
     NS_SHARED_PTR::shared_ptr<CPPCadesCPCertificateObject> pVal;
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_Item(index, pVal));
 
     object_init_ex(return_value, cert_ce);
-    cert_obj *Recipient =
-        (cert_obj *)zend_object_store_get_object(return_value TSRMLS_CC);
+    zobj = Z_OBJ_P(return_value);
+    certificate_obj *Recipient =
+        (certificate_obj *)((char *)zobj - XtOffsetOf(certificate_obj, zobj));
     Recipient->m_pCppCadesImpl = pVal;
 }
 
 PHP_METHOD(CPRecipients, Clear) {
+    zend_object *zobj = Z_OBJ_P(getThis());
     recipients_obj *obj =
-        (recipients_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        (recipients_obj *)((char *)zobj - XtOffsetOf(recipients_obj, zobj));
     obj->m_pCppCadesImpl->Clear();
 }
 
 PHP_METHOD(CPRecipients, Remove) {
     long index;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &index) ==
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "l", &index) ==
         FAILURE)
         RETURN_WITH_EXCEPTION(E_INVALIDARG);
 
+    zend_object *zobj = Z_OBJ_P(getThis());
     recipients_obj *obj =
-        (recipients_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        (recipients_obj *)((char *)zobj - XtOffsetOf(recipients_obj, zobj));
 
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->Remove(index));
 }
 
-zend_class_entry *recipients_class_entry;
-zend_object_handlers recipients_handlers;
+zend_class_entry *recipients_ce;
+zend_object_handlers recipients_obj_handlers;
 
-void recipients_free_storage(void *object TSRMLS_DC) {
-    recipients_obj *obj = (recipients_obj *)object;
+static void recipients_free(zend_object *object ) {
+    recipients_obj *obj = (recipients_obj *)((char *)object - XtOffsetOf(recipients_obj, zobj));
     obj->m_pCppCadesImpl.reset();
 
-    zend_hash_destroy(obj->zo.properties);
-    FREE_HASHTABLE(obj->zo.properties);
-
-    efree(obj);
+    zend_object_std_dtor(object);
 }
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cprecipients_add, 0, 0, 1)
+ ZEND_ARG_INFO(0, item)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cprecipients_get_count, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cprecipients_get_item, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cprecipients_clear, 0, 0, 0)
+ZEND_END_ARG_INFO()
 
 zend_function_entry recipients_methods[] = {
-    PHP_ME(CPRecipients, Add, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CPRecipients, get_Count, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CPRecipients, get_Item, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CPRecipients, Clear, NULL, ZEND_ACC_PUBLIC){NULL, NULL, NULL}};
+    PHP_ME(CPRecipients, Add, arginfo_cprecipients_add, ZEND_ACC_PUBLIC)
+    PHP_ME(CPRecipients, get_Count, arginfo_cprecipients_get_count, ZEND_ACC_PUBLIC)
+    PHP_ME(CPRecipients, get_Item, arginfo_cprecipients_get_item, ZEND_ACC_PUBLIC)
+    PHP_ME(CPRecipients, Clear, arginfo_cprecipients_clear, ZEND_ACC_PUBLIC)
+    {NULL, NULL, NULL}};
 
-zend_object_value recipients_create_handler(zend_class_entry *type TSRMLS_DC) {
-    zend_object_value retval;
+static zend_object* recipients_create_handler(zend_class_entry *ce ) {
+    recipients_obj *obj = (recipients_obj *)emalloc(sizeof(recipients_obj) + zend_object_properties_size(ce));
+    memset(obj, 0, sizeof(recipients_obj) + zend_object_properties_size(ce));
+    
+    zend_object_std_init(&obj->zobj, ce);
+    object_properties_init(&obj->zobj, ce);
+    obj->zobj.handlers = &recipients_obj_handlers;
 
-    recipients_obj *obj = (recipients_obj *)emalloc(sizeof(recipients_obj));
-    memset(obj, 0, sizeof(recipients_obj));
-
-    obj->zo.ce = type;
-
-    ALLOC_HASHTABLE(obj->zo.properties);
-    zend_hash_init(obj->zo.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-#if PHP_VERSION_ID < 50399
-    zval *tmp;
-    zend_hash_copy(obj->zo.properties, &(type->default_properties),
-                   (copy_ctor_func_t)zval_add_ref, (void *)&tmp,
-                   sizeof(zval *));
-#else
-    object_properties_init(&obj->zo, type);
-#endif
-    retval.handle = zend_objects_store_put(obj, NULL, recipients_free_storage,
-                                           NULL TSRMLS_CC);
-    retval.handlers = &recipients_handlers;
-
-    return retval;
+    return &obj->zobj;
 }
 
-void recipients_init(TSRMLS_D) {
+void recipients_init(void) {
     zend_class_entry ce;
     INIT_CLASS_ENTRY(ce, "CPRecipients", recipients_methods);
-    recipients_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
-    recipients_class_entry->create_object = recipients_create_handler;
-    memcpy(&recipients_handlers, zend_get_std_object_handlers(),
+    recipients_ce = zend_register_internal_class(&ce );
+    recipients_ce->create_object = recipients_create_handler;
+    memcpy(&recipients_obj_handlers, zend_get_std_object_handlers(),
            sizeof(zend_object_handlers));
-    recipients_handlers.clone_obj = NULL;
+    recipients_obj_handlers.clone_obj = NULL;
+    recipients_obj_handlers.free_obj = recipients_free;
+    recipients_obj_handlers.offset = XtOffsetOf(recipients_obj, zobj);
 }

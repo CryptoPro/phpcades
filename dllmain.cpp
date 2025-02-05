@@ -28,36 +28,40 @@
 #include "PHPCadesCPSignedXML.h"
 #include "PHPCadesSymmetricAlgorithm.h"
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_gearman_verbose_name, 0, 0, 1)
+	ZEND_ARG_INFO(0, verbose)
+ZEND_END_ARG_INFO()
+
 PHP_MINIT_FUNCTION(php_cpcsp) {
     // le_hash_resource = zend_register_list_destructors_ex(php_hash_res_dtor,
     // php_hash_res_pdtor, PHP_HASH_RESOURCE_NAME, module_number);
-    about_init(TSRMLS_C);
-    version_init(TSRMLS_C);
-    store_init(TSRMLS_C);
-    certs_init(TSRMLS_C);
-    cert_init(TSRMLS_C);
-    ku_init(TSRMLS_C);
-    exku_init(TSRMLS_C);
-    eku_init(TSRMLS_C);
-    algo_init(TSRMLS_C);
-    private_key_init(TSRMLS_C);
-    encoded_data_init(TSRMLS_C);
-    public_key_init(TSRMLS_C);
-    oid_init(TSRMLS_C);
-    attr_init(TSRMLS_C);
-    basic_constr_init(TSRMLS_C);
-    certstat_init(TSRMLS_C);
-    enveloped_data_init(TSRMLS_C);
-    sig_init(TSRMLS_C);
-    eku_col_init(TSRMLS_C);
-    attr_col_init(TSRMLS_C);
-    signers_init(TSRMLS_C);
-    recipients_init(TSRMLS_C);
-    sig_dat_init(TSRMLS_C);
-    hash_dat_init(TSRMLS_C);
-    raw_sig_init(TSRMLS_C);
-    sig_xml_init(TSRMLS_C);
-    symmetric_algorithm_init(TSRMLS_C);
+    about_init();
+    version_init();
+    store_init();
+    certs_init();
+    cert_init();
+    ku_init();
+    exku_init();
+    eku_init();
+    algo_init();
+    private_key_init();
+    encoded_data_init();
+    public_key_init();
+    oid_init();
+    attr_init();
+    basic_constr_init();
+    certstat_init();
+    enveloped_data_init();
+    sig_init();
+    eku_col_init();
+    attr_col_init();
+    signers_init();
+    recipients_init();
+    signed_data_init();
+    hashed_data_init();
+    raw_sig_init();
+    signed_xml_init();
+    symmetric_algorithm_init();
 
     REGISTER_LONG_CONSTANT("MEMORY_STORE", 0, CONST_CS | CONST_PERSISTENT);
     REGISTER_LONG_CONSTANT("LOCAL_MACHINE_STORE", 1,

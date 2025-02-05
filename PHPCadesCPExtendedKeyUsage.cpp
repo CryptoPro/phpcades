@@ -5,9 +5,9 @@
 using namespace CryptoPro::PKI::CAdES;
 
 PHP_METHOD(CPExtendedKeyUsage, __construct) {
-
+    zend_object *zobj = Z_OBJ_P(getThis());
     exku_obj *obj =
-        (exku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        (exku_obj *)((char *)zobj - XtOffsetOf(exku_obj, zobj));
     obj->m_pCppCadesImpl = NS_SHARED_PTR::shared_ptr<CPPCadesCPExtendedKeyUsageObject>(
         new CPPCadesCPExtendedKeyUsageObject());
 }
@@ -15,33 +15,37 @@ PHP_METHOD(CPExtendedKeyUsage, __construct) {
 PHP_METHOD(CPExtendedKeyUsage, get_IsPresent) {
     BOOL val;
 
+    zend_object *zobj = Z_OBJ_P(getThis());
     exku_obj *obj =
-        (exku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        (exku_obj *)((char *)zobj - XtOffsetOf(exku_obj, zobj));
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_IsPresent(&val));
 
-    RETURN_LONG(val)
+    RETURN_LONG(val);
 }
 
 PHP_METHOD(CPExtendedKeyUsage, get_IsCritical) {
     BOOL val;
 
+    zend_object *zobj = Z_OBJ_P(getThis());
     exku_obj *obj =
-        (exku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        (exku_obj *)((char *)zobj - XtOffsetOf(exku_obj, zobj));
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_IsCritical(&val));
 
-    RETURN_LONG(val)
+    RETURN_LONG(val);
 }
 
 PHP_METHOD(CPExtendedKeyUsage, get_EKUs) {
+    zend_object *zobj = Z_OBJ_P(getThis());
     exku_obj *obj =
-        (exku_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        (exku_obj *)((char *)zobj - XtOffsetOf(exku_obj, zobj));
     NS_SHARED_PTR::shared_ptr<CPPCadesCPEKUsObject> ptr(new CPPCadesCPEKUsObject());
 
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_EKUs(ptr));
 
     object_init_ex(return_value, eku_col_ce);
-    eku_col *ekus =
-        (eku_col *)zend_object_store_get_object(return_value TSRMLS_CC);
+    zobj = Z_OBJ_P(return_value);
+    eku_col_obj *ekus =
+        (eku_col_obj *)((char *)zobj - XtOffsetOf(eku_col_obj, zobj));
 
     ekus->m_pCppCadesImpl = ptr;
     ekus->type = eku_ce;
@@ -50,55 +54,52 @@ PHP_METHOD(CPExtendedKeyUsage, get_EKUs) {
 zend_object_handlers exku_obj_handlers;
 zend_class_entry *exku_ce;
 
-void exku_free_storage(void *object TSRMLS_DC) {
-    exku_obj *obj = (exku_obj *)object;
+static void exku_free(zend_object* object) {
+    exku_obj *obj = (exku_obj *)((char *)object - XtOffsetOf(exku_obj, zobj));;
     obj->m_pCppCadesImpl.reset();
 
-    zend_hash_destroy(obj->zo.properties);
-    FREE_HASHTABLE(obj->zo.properties);
-
-    efree(obj);
+    zend_object_std_dtor(object);
 }
 
-zend_object_value exku_create_handler(zend_class_entry *type TSRMLS_DC) {
-    zend_object_value retval;
+static zend_object* exku_create_handler(zend_class_entry *ce ) {
+    exku_obj *obj = (exku_obj *)emalloc(sizeof(exku_obj) + zend_object_properties_size(ce));
+    memset(obj, 0, sizeof(exku_obj) + zend_object_properties_size(ce));
+    
+    zend_object_std_init(&obj->zobj, ce);
+    object_properties_init(&obj->zobj, ce);
+    obj->zobj.handlers = &exku_obj_handlers;
 
-    exku_obj *obj = (exku_obj *)emalloc(sizeof(exku_obj));
-    memset(obj, 0, sizeof(exku_obj));
-    obj->zo.ce = type;
-
-    ALLOC_HASHTABLE(obj->zo.properties);
-    zend_hash_init(obj->zo.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-#if PHP_VERSION_ID < 50399
-    zval *tmp;
-    zend_hash_copy(obj->zo.properties, &(type->default_properties),
-                   (copy_ctor_func_t)zval_add_ref, (void *)&tmp,
-                   sizeof(zval *));
-#else
-    object_properties_init(&obj->zo, type);
-#endif
-
-    retval.handle =
-        zend_objects_store_put(obj, NULL, exku_free_storage, NULL TSRMLS_CC);
-    retval.handlers = &exku_obj_handlers;
-
-    return retval;
+    return &obj->zobj;
 }
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpextendedkeyusage_construct, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpextendedkeyusage_get_ispresent, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpextendedkeyusage_get_iscritical, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpextendedkeyusage_get_ekus, 0, 0, 0)
+ZEND_END_ARG_INFO()
 
 //связывание методов класса в function entry
 zend_function_entry exku_methods[] = {
-    PHP_ME(CPExtendedKeyUsage, __construct, NULL,
-           ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-    PHP_ME(CPExtendedKeyUsage, get_IsPresent, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CPExtendedKeyUsage, get_IsCritical, NULL, ZEND_ACC_PUBLIC) PHP_ME(
-        CPExtendedKeyUsage, get_EKUs, NULL, ZEND_ACC_PUBLIC){NULL, NULL, NULL}};
+    PHP_ME(CPExtendedKeyUsage, __construct, arginfo_cpextendedkeyusage_construct, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    PHP_ME(CPExtendedKeyUsage, get_IsPresent, arginfo_cpextendedkeyusage_get_ispresent, ZEND_ACC_PUBLIC)
+    PHP_ME(CPExtendedKeyUsage, get_IsCritical, arginfo_cpextendedkeyusage_get_iscritical, ZEND_ACC_PUBLIC) 
+    PHP_ME(CPExtendedKeyUsage, get_EKUs, arginfo_cpextendedkeyusage_get_ekus, ZEND_ACC_PUBLIC)
+    {NULL, NULL, NULL}};
 
-void exku_init(TSRMLS_D) {
+void exku_init(void) {
     zend_class_entry ce;
     INIT_CLASS_ENTRY(ce, "CPExtendedKeyUsage", exku_methods);
-    exku_ce = zend_register_internal_class(&ce TSRMLS_CC);
+    exku_ce = zend_register_internal_class(&ce );
     exku_ce->create_object = exku_create_handler;
     memcpy(&exku_obj_handlers, zend_get_std_object_handlers(),
            sizeof(zend_object_handlers));
     exku_obj_handlers.clone_obj = NULL;
+    exku_obj_handlers.free_obj = exku_free;
+    exku_obj_handlers.offset = XtOffsetOf(exku_obj, zobj);
 }

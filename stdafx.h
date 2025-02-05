@@ -17,6 +17,21 @@
 #define RETURN_ATL_STRINGL RETURN_ATL_STRINGL_W
 #endif
 
+/* C99 requires these for C++ to get the definitions
+ * of INT64_MAX and other macros used by Zend/zend_long.h
+ * C11 drops this requirement, so these effectively
+ * just backport that piece of behavior.
+ */
+#ifdef __cplusplus
+# ifndef __STDC_LIMIT_MACROS
+#  define __STDC_LIMIT_MACROS
+# endif
+# ifndef __STDC_CONSTANT_MACROS
+#  define __STDC_CONSTANT_MACROS
+# endif
+#endif
+
+
 #include <iostream>
 #include <memory> //Этот хедер тут нужен что бы компилить с новыми версиями libstdc++
                   //в них есть конфликт с __in и __out макросами которые определены в MS хедерах.
@@ -97,7 +112,7 @@
     str = (char *)ecalloc(len + 1, sizeof(char));\
     wcstombs(str, atlstr, len);\
     str[len] = '\0';\
-    RETURN_STRING(str, 0)\
+    RETURN_STRING(str);\
     }
 
 #define RETURN_ATL_STRINGL_W(atlstr)\
@@ -107,7 +122,7 @@
     len = atlstr.GetLength();\
     str = (char *)ecalloc(len, sizeof(char));\
     wcstombs(str, atlstr, len);\
-    RETURN_STRINGL(str, len, 0)\
+    RETURN_STRINGL(str, len);\
     }
 
 #define RETURN_ATL_STRING_A(atlstr)\
@@ -118,7 +133,7 @@
     str = (char *)ecalloc(len + 1, sizeof(char));\
     memcpy(str, atlstr, len);\
     str[len] = '\0';\
-    RETURN_STRING(str, 0)\
+    RETURN_STRING(str);\
     }
 
 #define RETURN_ATL_STRINGL_A(atlstr)\
@@ -128,7 +143,7 @@
     len = atlstr.GetLength();\
     str = (char *)ecalloc(len, sizeof(char));\
     memcpy(str, atlstr, len);\
-    RETURN_STRINGL(str, len, 0)\
+    RETURN_STRINGL(str, len);\
     }
 
 #define RETURN_PROXY_STRING(prstr)\
@@ -138,7 +153,7 @@
     len = strlen(prstr.c_str());\
     str = (char *)ecalloc(len + 1, sizeof(char));\
     strncpy(str, prstr.c_str(), len + 1);\
-    RETURN_STRING(str, 0)\
+    RETURN_STRING(str);\
     }
 
 #ifdef UNIX //разные макросы ибо на линуксе нет  _vscwprintf() который нужен внутри AppendFormat().
@@ -156,7 +171,7 @@
         wchar_t buff[14];                                               \
         swprintf(buff, 14, L" (0x%08X)", err);                          \
         message.Append(buff);                                           \
-        zend_throw_exception(zend_exception_get_default(TSRMLS_C), CW2A(message, CP_UTF8), err TSRMLS_CC);\
+        zend_throw_exception(zend_exception_get_default(), CW2A(message, CP_UTF8), err );\
         RETURN_FALSE;\
         } while (0)
 
@@ -166,7 +181,7 @@
         CAtlStringW message = GetErrorMessage(HRESULT_FROM_WIN32(err),	\
 	    MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));              \
         message.AppendFormat(L" (0x%08X)", err);                        \
-        zend_throw_exception(zend_exception_get_default(TSRMLS_C), CW2A(message, CP_UTF8), err TSRMLS_CC);\
+        zend_throw_exception(zend_exception_get_default(), CW2A(message, CP_UTF8), err );\
         RETURN_FALSE;\
         } while (0)
 
