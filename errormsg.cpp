@@ -4,14 +4,14 @@
 * \date $Date:: 2021-10-26 16:40:10 +0300#$
 * \author $Author: een $
 *
-* \brief ���������� �������������� ��������� �� �������.
+* \brief Реализация форматирования сообщений об ошибках.
 *
-* ���������� �������������� ��������� �� �������.
+* Реализация форматирования сообщений об ошибках.
 */
 
 #define IGNORE_LEGACY_FORMAT_MESSAGE_MSG
 
-// ����������� �� "*_e.h"
+// Скопированы из "*_e.h"
 #define FACILITY_TSPCLI                  0x210
 #define FACILITY_OCSPCLI                 0x211
 #define FACILITY_TSPSRV                  0x212
@@ -26,12 +26,12 @@
 #   include "tspcli_e.h"
 #else //_WIN32
 
-#   define STRICT // ��� ����� ������� ���������. �� ������ ���������� MS, ���
-          // � Visual C++ STRICT ���������� �� ���������.
-#   define WIN32_LEAN_AND_MEAN // ��� ��������� ����������
-#   define _WIN32_WINNT 0x0501 // ������ �������� ������� � XP
+#   define STRICT // Для более строгой типизации. Не верить заявлениям MS, что
+          // в Visual C++ STRICT определено по умолчанию.
+#   define WIN32_LEAN_AND_MEAN // Для ускорения компиляции
+#   define _WIN32_WINNT 0x0501 // Должно работать начиная с XP
 
-// ��� ActCtx.h
+// Для ActCtx.h
 #define ISOLATION_AWARE_ENABLED 1
 
 #include <windows.h>
@@ -54,8 +54,8 @@
 #include "errormsg.h"
 
 static LPCWSTR eng_wrong_name = L"Wrong name format or an attempt is made to open container of another CSP.";
-// ����������� ����� ���������� � ����� \trunk\CSP\capilite\CryptFindOIDInfo.cpp
-// rus_wrong_name = L"�������� ������ ����� ��� ������� ������� ��������� ������� ����������������.";
+// Кодирование можно посмотреть в файле \trunk\CSP\capilite\CryptFindOIDInfo.cpp
+// rus_wrong_name = L"Неверный формат имени или попытка открыть контейнер другого криптопровайдера.";
 static LPCWSTR rus_wrong_name = L"\x41d\x435\x432\x435\x440\x43d\x44b\x439 \x444\x43e\x440\x43c\x430\x442 \x438\x43c\x435\x43d\x438 \x438\x43b\x438 \x43f\x43e\x43f\x44b\x442\x43a\x430 \x43e\x442\x43a\x440\x44b\x442\x44c \x43a\x43e\x43d\x442\x435\x439\x43d\x435\x440 \x434\x440\x443\x433\x43e\x433\x43e \x43a\x440\x438\x43f\x442\x43e\x43f\x440\x43e\x432\x430\x439\x434\x435\x440\x430.";
 
 
@@ -100,8 +100,8 @@ BOOL GetErrorMessage(
             hInst = ::GetModuleHandle(TEXT("cades.dll"));
             if (hInst)
             {
-                //TODO: ���� ����������� �������� ����������, �� ����� ��������
-                //������ �����.
+                //TODO: Если конструктор выбросит исключение, то здесь случится
+                //полная фигня.
                 static CryptoPro::ActCtx::CActCtxHandle actCtxCadesDll(hInst);
                 CryptoPro::ActCtx::CActCtxActivator activatorCadesDll(actCtxCadesDll);
                 hInst = ::GetModuleHandle(TEXT("tspcli.dll"));
@@ -119,8 +119,8 @@ BOOL GetErrorMessage(
             hInst = ::GetModuleHandle(TEXT("cades.dll"));
             if (hInst)
             {
-                //TODO: ���� ����������� �������� ����������, �� ����� ��������
-                //������ �����.
+                //TODO: Если конструктор выбросит исключение, то здесь случится
+                //полная фигня.
                 static CryptoPro::ActCtx::CActCtxHandle actCtxCadesDll(hInst);
                 CryptoPro::ActCtx::CActCtxActivator activatorCadesDll(actCtxCadesDll);
                 hInst = ::GetModuleHandle(TEXT("ocspcli.dll"));
@@ -138,15 +138,15 @@ BOOL GetErrorMessage(
     if (!hInst
         && (dwFacility == FACILITY_TSPCLI || dwFacility == FACILITY_OCSPCLI))
     {
-        // ��� ����� ����� ������ ��������� ����� ��������� � ������,
-        // ���������� ������ ����������� ���. ��������, cadescom.dll
-        // ������� ��������� ������ ����� ����.
+        // Для наших кодов ошибок попробуем найти сообщение в модуле,
+        // содержащем данный исполняемый код. Например, cadescom.dll
+        // получит сообщение именно таким путём.
         //
-        // � �������� ������ � GetModuleHandleEx(
-        // GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS) ������� ����� ��������,
-        // ������� �������������� ����� � �������� ������������ �������
-        // ������. ��� �������� ��������� ����������, �.�. ��� ����������
-        // ����, ��� � hInst ��������� 0.
+        // В качестве адреса в GetModuleHandleEx(
+        // GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS) передаём адрес литерала,
+        // который гарантированно будет в адресном пространстве данного
+        // модуля. Код вовзрата намеренно игнорируем, т.к. нам достаточно
+        // того, что в hInst останется 0.
         ::GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
             | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, _T(" "), &hInst);
     }
@@ -166,8 +166,8 @@ BOOL GetErrorMessage(
     if (!dwRet) {
     if (hInst) {
         dwRet = FormatMessage(dwFlagsMod, hInst, hr, dwLangId, szBuf, chBufLen, NULL);
-        // ���� �� ����� ��������� � ��������� �������� �����,
-        // ������� � ����� 0 (����� ����� �� ������ ��������� ������)
+        // Если не нашли сообщение в конкретно заданном языке,
+        // спросим в языке 0 (будет поиск по разным системным языкам)
         if (!dwRet && dwLangId)
         dwRet = FormatMessage(dwFlagsMod, hInst, hr, 0, szBuf, chBufLen, NULL);
         hInst = 0;
@@ -176,8 +176,8 @@ BOOL GetErrorMessage(
     DWORD dwFlagsSys = FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM;
     if (!dwRet) {
     dwRet = FormatMessage(dwFlagsSys, 0, hr, dwLangId, szBuf, chBufLen, NULL);
-    // ���� �� ����� ��������� � ��������� �������� �����,
-    // ������� � ����� 0 (����� ����� �� ������ ��������� ������)
+    // Если не нашли сообщение в конкретно заданном языке,
+    // спросим в языке 0 (будет поиск по разным системным языкам)
     if (!dwRet && dwLangId)
         dwRet = FormatMessage(dwFlagsSys, 0, hr, 0, szBuf, chBufLen, NULL);
     }
@@ -186,10 +186,10 @@ BOOL GetErrorMessage(
     hInst = ::GetModuleHandle(TEXT("winhttp.dll"));
     if (hInst)
     {
-        // ��� ���������� dwCode, � �� ������ hr!
+        // Тут используем dwCode, а не полный hr!
         dwRet = FormatMessage(dwFlagsMod, hInst, dwCode, dwLangId, szBuf, chBufLen, NULL);
-        // ���� �� ����� ��������� � ��������� �������� �����,
-        // ������� � ����� 0 (����� ����� �� ������ ��������� ������)
+        // Если не нашли сообщение в конкретно заданном языке,
+        // спросим в языке 0 (будет поиск по разным системным языкам)
         if (!dwRet && dwLangId)
         dwRet = FormatMessage(dwFlagsMod, hInst, dwCode, 0, szBuf, chBufLen, NULL);
     }
@@ -200,8 +200,8 @@ BOOL GetErrorMessage(
     if (hInst)
     {
         dwRet = FormatMessage(dwFlagsMod, hInst, hr, dwLangId, szBuf, chBufLen, NULL);
-        // ���� �� ����� ��������� � ��������� �������� �����,
-        // ������� � ����� 0 (����� ����� �� ������ ��������� ������)
+        // Если не нашли сообщение в конкретно заданном языке,
+        // спросим в языке 0 (будет поиск по разным системным языкам)
         if (!dwRet && dwLangId)
         dwRet = FormatMessage(dwFlagsMod, hInst, hr, 0, szBuf, chBufLen, NULL);
     }
@@ -212,8 +212,8 @@ BOOL GetErrorMessage(
     if (hInst)
     {
         dwRet = FormatMessage(dwFlagsMod, hInst, hr, dwLangId, szBuf, chBufLen, NULL);
-        // ���� �� ����� ��������� � ��������� �������� �����,
-        // ������� � ����� 0 (����� ����� �� ������ ��������� ������)
+        // Если не нашли сообщение в конкретно заданном языке,
+        // спросим в языке 0 (будет поиск по разным системным языкам)
         if (!dwRet && dwLangId)
         dwRet = FormatMessage(dwFlagsMod, hInst, hr, 0, szBuf, chBufLen, NULL);
     }
@@ -418,7 +418,7 @@ const ATL::CAtlStringW GetErrorMessage(HRESULT hr, DWORD dwLangId)
     switch(hr){
         case (HRESULT)CAPICOM_E_STORE_NOT_OPENED:
 	    if (bRussian) {
-		// ������ Store �� ��� ���������������.
+		// Объект Store не был инициализирован.
 		ret = L"\x41e\x431\x44a\x435\x43a\x442 Store \x43d\x435 \x431\x44b\x43b \x438\x43d\x438\x446\x438\x430\x43b\x438\x437\x438\x440\x43e\x432\x430\x43d.";
 	    }
 	    else {
@@ -427,7 +427,7 @@ const ATL::CAtlStringW GetErrorMessage(HRESULT hr, DWORD dwLangId)
             break;
         case (HRESULT)NS_E_CURL_INVALIDSCHEME: 
 	    if (bRussian) {
-		// URL-����� �������� ������������ �����.
+		// URL-адрес содержит некорректную схему.
 		ret = L"URL-\x430\x434\x440\x435\x441 \x441\x43e\x434\x435\x440\x436\x438\x442 \x43d\x435\x43a\x43e\x440\x440\x435\x43a\x442\x43d\x443\x44e \x441\x445\x435\x43c\x443.";
 	    }
 	    else {
@@ -436,7 +436,7 @@ const ATL::CAtlStringW GetErrorMessage(HRESULT hr, DWORD dwLangId)
             break;
         default:
 	    if (bRussian) {
-		// ���������� ������
+		// Внутренняя ошибка
 		ret = L"\x412\x43d\x443\x442\x440\x435\x43d\x43d\x44f\x44f \x43e\x448\x438\x431\x43a\x430.";
 	    }
 	    else {

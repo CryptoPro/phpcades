@@ -3,8 +3,8 @@
 
 #include "CPPCadesCPAttributes.h"
 
-//���������� ���������, ������� ������ ������ �������������� ������
-//� �������� php
+//объявление структуры, которая свяжет объект оборачиваемого класса
+//с объектом php
 struct attr_col {
     zend_object zo;
     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPAttributesObject> m_pCppCadesImpl;
@@ -17,8 +17,8 @@ extern zend_object_handlers attr_col_handlers;
 void attr_col_free_storage(void *object TSRMLS_DC);
 zend_object_value attr_col_create_handler(zend_class_entry *type TSRMLS_DC);
 
-//������� ������������� ������. ������ ���������� �
-//�������, ������������� ������
+//функция инициализации класса. должна включаться в
+//функцию, инициализации модуля
 void attr_col_init(TSRMLS_D);
 
 #endif

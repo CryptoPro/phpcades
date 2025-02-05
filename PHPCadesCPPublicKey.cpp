@@ -97,7 +97,7 @@ zend_object_value public_key_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry public_key_methods[] = {
     PHP_ME(CPPublicKey, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPPublicKey, get_Algorithm, NULL, ZEND_ACC_PUBLIC)

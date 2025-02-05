@@ -17,7 +17,7 @@ PHP_METHOD(CPRecipients, Add) {
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->Add(Recipient->m_pCppCadesImpl));
 }
 
-//���� ������, ������� ����� �������� �� ����� ����
+//ядро метода, которое будет работать на самом деле
 PHP_METHOD(CPRecipients, get_Count) {
     unsigned int value;
 
@@ -29,7 +29,7 @@ PHP_METHOD(CPRecipients, get_Count) {
     RETURN_LONG(value)
 }
 
-//���� ������, ������� ����� �������� �� ����� ����
+//ядро метода, которое будет работать на самом деле
 PHP_METHOD(CPRecipients, get_Item) {
     long index;
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &index) ==

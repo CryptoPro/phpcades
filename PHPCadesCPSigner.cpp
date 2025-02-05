@@ -5,7 +5,7 @@
 #include "PHPCadesCPAttributes.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//������
+//Методы
 PHP_METHOD(CPSigner, __construct) {
     sig_obj *obj = (sig_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
     NS_SHARED_PTR::shared_ptr<CPPCadesCPSignerObject> ptr(new CPPCadesCPSignerObject());
@@ -195,7 +195,7 @@ PHP_METHOD(CPSigner, set_KeyPin) {
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_KeyPin(pin));
 }
 
-//��������������� ������� �������
+//Вспомогательные функции обертки
 zend_object_handlers sig_obj_handlers;
 zend_class_entry *sig_ce;
 

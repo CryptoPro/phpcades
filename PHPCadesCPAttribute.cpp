@@ -3,7 +3,7 @@
 #include "PHPCadesCPOID.h"
 using namespace CryptoPro::PKI::CAdES;
 
-//������
+//Методы
 PHP_METHOD(CPAttribute, __construct) {
     attr_obj *obj =
         (attr_obj *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -150,7 +150,7 @@ PHP_METHOD(CPAttribute, get_ValueEncoding) {
     RETURN_LONG(type)
 }
 
-//��������������� ������� �������
+//Вспомогательные функции обертки
 zend_object_handlers attr_obj_handlers;
 zend_class_entry *attr_ce;
 
@@ -189,7 +189,7 @@ zend_object_value attr_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry attr_methods[] = {
     PHP_ME(CPAttribute, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPAttribute, set_OID, NULL, ZEND_ACC_PUBLIC)

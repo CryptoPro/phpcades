@@ -193,7 +193,7 @@ zend_object_value ku_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry ku_methods[] = {
     PHP_ME(CPKeyUsage, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPKeyUsage, get_IsPresent, NULL, ZEND_ACC_PUBLIC)

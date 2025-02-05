@@ -150,7 +150,7 @@ zend_object_value enveloped_data_create_handler(zend_class_entry *type
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry enveloped_data_methods[] = {
     PHP_ME(CPEnvelopedData, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPEnvelopedData, get_Content, NULL, ZEND_ACC_PUBLIC)

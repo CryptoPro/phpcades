@@ -103,7 +103,7 @@ zend_object_value private_key_create_handler(zend_class_entry *type TSRMLS_DC) {
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry private_key_methods[] = {
     PHP_ME(CPPrivateKey, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPPrivateKey, get_ContainerName, NULL, ZEND_ACC_PUBLIC)

@@ -92,7 +92,7 @@ zend_object_value encoded_data_create_handler(zend_class_entry *type
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry encoded_data_methods[] = {
     PHP_ME(CPEncodedData, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CPEncodedData, Format, NULL, ZEND_ACC_PUBLIC)

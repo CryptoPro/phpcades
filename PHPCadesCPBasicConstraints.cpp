@@ -88,7 +88,7 @@ PHP_METHOD(CPBasicConstraints, get_PathLenConstraint) {
     RETURN_LONG(plc)
 }
 
-//��������������� ������� �������
+//Вспомогательные функции обертки
 zend_object_handlers basic_constr_obj_handlers;
 zend_class_entry *basic_constr_ce;
 
@@ -129,7 +129,7 @@ zend_object_value basic_constr_create_handler(zend_class_entry *type
     return retval;
 }
 
-//���������� ������� ������ � function entry
+//связывание методов класса в function entry
 zend_function_entry basic_constr_methods[] = {
     PHP_ME(CPBasicConstraints, __construct, NULL,
            ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
