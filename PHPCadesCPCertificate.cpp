@@ -62,10 +62,12 @@ PHP_METHOD(CPCertificate, HasPrivateKey) {
         (certificate_obj *)((char *)zobj - XtOffsetOf(certificate_obj, zobj));
 
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->HasPrivateKey(&has));
-    if (has)
+    if (has) {
         RETURN_TRUE;
-    else
+    }
+    else {
         RETURN_FALSE;
+    }
 }
 
 PHP_METHOD(CPCertificate, IsValid) {
