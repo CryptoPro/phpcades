@@ -1,11 +1,20 @@
 PHPDIR=/php
 PHPINCLUDE=-I$(PHPDIR) -I$(PHPDIR)/main -I$(PHPDIR)/Zend -I$(PHPDIR)/TSRM 
 #CAN BE LINUX, FREEBSD, AIX
+
+CPRO_CADES_VERSION_MAJOR := $(shell if type dpkg > /dev/null 2>&1; then dpkg -l|grep cprocsp-pki-cades|awk ' { print $$3 } '; else rpm -qa|grep cprocsp-pki-cades; fi|cut -d. -f1|cut -d- -f1)
+CPRO_CADES_VERSION_MINOR := $(shell if type dpkg > /dev/null 2>&1; then dpkg -l|grep cprocsp-pki-cades|awk ' { print $$3 } '; else rpm -qa|grep cprocsp-pki-cades; fi|cut -d. -f2|cut -d- -f1)
+CPRO_CADES_VERSION_BUILD := $(shell if type dpkg > /dev/null 2>&1; then dpkg -l|grep cprocsp-pki-cades|awk ' { print $$3 } '; else rpm -qa|grep cprocsp-pki-cades; fi|cut -d. -f3|cut -d- -f1)
+$(info cprocsp-pki-cades: ${CPRO_CADES_VERSION_MAJOR}.${CPRO_CADES_VERSION_MINOR}.${CPRO_CADES_VERSION_BUILD})
+
 PLATFORM_FLAGS=-DLINUX
 CFLAGS=$(PLATFORM_FLAGS)  -DUNIX -DHAVE_LIMITS_H $(ARCH_FLAGS) $(add_CPPFLAGS) -I$(CSP_INCLUDE)/\
 -I$(CSP_INCLUDE)/cpcsp -I$(CSP_INCLUDE)/pki -I$(CSP_INCLUDE)/pki/atl \
 -I$(CSP_INCLUDE)/pki/cppcades -I$(CSP_INCLUDE)/pki/cplib -I${CURDIR} -I${CURDIR}/cplib $(PHPINCLUDE)\
--DSIZEOF_VOID_P=$(SIZEOF_VOID_P) -fPIC -DPIC -fpermissive -std=c++11 -Wno-deprecated -Wno-unused-result
+-DSIZEOF_VOID_P=$(SIZEOF_VOID_P) -fPIC -DPIC -fpermissive -std=c++11 -Wno-deprecated -Wno-unused-result\
+-DCPRO_CADES_VERSION_MAJOR=${CPRO_CADES_VERSION_MAJOR}\
+-DCPRO_CADES_VERSION_MINOR=${CPRO_CADES_VERSION_MINOR}\
+-DCPRO_CADES_VERSION_BUILD=${CPRO_CADES_VERSION_BUILD}
 LDFLAGS= $(ARCH_FLAGS) -L$(CSP_LIB) -lcppcades -lcapi10 -lcapi20 -lrdrsup $(add_ldflags) -g
 
 SOURCES=\

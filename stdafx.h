@@ -10,6 +10,11 @@
 #define CERT_PARA_HAS_EXTRA_FIELDS
 #define IGNORE_LEGACY_FORMAT_MESSAGE_MSG
 
+#define IS_CADES_VERSION_GREATER_EQUAL(major, minor, build) \
+    (CPRO_CADES_VERSION_MAJOR > (major) || \
+    (CPRO_CADES_VERSION_MAJOR == (major) && CPRO_CADES_VERSION_MINOR > (minor)) || \
+    (CPRO_CADES_VERSION_MAJOR == (major) && CPRO_CADES_VERSION_MINOR == (minor) && CPRO_CADES_VERSION_BUILD >= (build)))
+
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
 #ifdef _WIN32
