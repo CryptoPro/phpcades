@@ -447,6 +447,43 @@ PHP_METHOD(CPSignedData, get_Certificates) {
     pCertificates->m_pCppCadesImpl = pVal;
 }
 
+#if IS_CADES_VERSION_GREATER_EQUAL(2, 0, 15262)
+PHP_METHOD(CPSignedData, GetMsgType) {
+    char *sVal;
+    size_t lVal;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "s", &sVal, &lVal) ==
+        FAILURE)
+        RETURN_WITH_EXCEPTION(E_INVALIDARG);
+
+    zend_object *zobj = Z_OBJ_P(getThis());
+    signed_data_obj *obj =
+        (signed_data_obj *)((char *)zobj - XtOffsetOf(signed_data_obj, zobj));
+    CStringBlob msg(sVal);
+    DWORD result = 0;
+    HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->GetMsgType(msg, &result));
+    RETURN_LONG(result);
+}
+
+PHP_METHOD(CPSignedData, IsMsgType) {
+    long type = 1;
+    char *str;
+    size_t len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "sl", &str, &len,
+                              &type) == FAILURE)
+        RETURN_WITH_EXCEPTION(E_INVALIDARG);
+
+    zend_object *zobj = Z_OBJ_P(getThis());
+    signed_data_obj *obj =
+        (signed_data_obj *)((char *)zobj - XtOffsetOf(signed_data_obj, zobj));
+    CStringBlob msg(str);
+    BOOL res = 0;
+    HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->IsMsgType(msg, type, &res));
+    RETURN_LONG(res);
+}
+#endif
+
 ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigneddata_construct, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
@@ -532,6 +569,17 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigneddata_get_certificates, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
+#if IS_CADES_VERSION_GREATER_EQUAL(2, 0, 15262)
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigneddata_getmsgtype, 0, 0, 1)
+ ZEND_ARG_INFO(0, message)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigneddata_ismsgtype, 0, 0, 2)
+ ZEND_ARG_INFO(0, message)
+ ZEND_ARG_INFO(0, type)
+ZEND_END_ARG_INFO()
+#endif
+
 zend_class_entry *signed_data_ce;
 zend_object_handlers signed_data_obj_handlers;
 
@@ -553,6 +601,10 @@ zend_function_entry signed_data_methods[] = {
     PHP_ME(CPSignedData, get_Content, arginfo_cpsigneddata_get_content, ZEND_ACC_PUBLIC)
     PHP_ME(CPSignedData, get_Signers, arginfo_cpsigneddata_get_signers, ZEND_ACC_PUBLIC)
     PHP_ME(CPSignedData, get_Certificates, arginfo_cpsigneddata_get_certificates, ZEND_ACC_PUBLIC)
+#if IS_CADES_VERSION_GREATER_EQUAL(2, 0, 15262)
+    PHP_ME(CPSignedData, GetMsgType, arginfo_cpsigneddata_getmsgtype, ZEND_ACC_PUBLIC)
+    PHP_ME(CPSignedData, IsMsgType, arginfo_cpsigneddata_ismsgtype, ZEND_ACC_PUBLIC)
+#endif
     {NULL, NULL, NULL}};
 
 static void signed_data_free(zend_object *object ) {
