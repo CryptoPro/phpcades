@@ -447,7 +447,7 @@ PHP_METHOD(CPSignedData, get_Certificates) {
     pCertificates->m_pCppCadesImpl = pVal;
 }
 
-#if IS_CADES_VERSION_GREATER_EQUAL(2, 0, 15262)
+#if IS_CADES_VERSION_GREATER_EQUAL(2, 0, 15260)
 PHP_METHOD(CPSignedData, GetMsgType) {
     char *sVal;
     size_t lVal;
@@ -569,7 +569,7 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigneddata_get_certificates, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
-#if IS_CADES_VERSION_GREATER_EQUAL(2, 0, 15262)
+#if IS_CADES_VERSION_GREATER_EQUAL(2, 0, 15260)
 ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigneddata_getmsgtype, 0, 0, 1)
  ZEND_ARG_INFO(0, message)
 ZEND_END_ARG_INFO()
@@ -601,7 +601,7 @@ zend_function_entry signed_data_methods[] = {
     PHP_ME(CPSignedData, get_Content, arginfo_cpsigneddata_get_content, ZEND_ACC_PUBLIC)
     PHP_ME(CPSignedData, get_Signers, arginfo_cpsigneddata_get_signers, ZEND_ACC_PUBLIC)
     PHP_ME(CPSignedData, get_Certificates, arginfo_cpsigneddata_get_certificates, ZEND_ACC_PUBLIC)
-#if IS_CADES_VERSION_GREATER_EQUAL(2, 0, 15262)
+#if IS_CADES_VERSION_GREATER_EQUAL(2, 0, 15260)
     PHP_ME(CPSignedData, GetMsgType, arginfo_cpsigneddata_getmsgtype, ZEND_ACC_PUBLIC)
     PHP_ME(CPSignedData, IsMsgType, arginfo_cpsigneddata_ismsgtype, ZEND_ACC_PUBLIC)
 #endif
