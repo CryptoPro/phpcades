@@ -385,6 +385,8 @@ PHP_MINIT_FUNCTION(php_cpcsp) {
                            CONST_CS | CONST_PERSISTENT);
     REGISTER_LONG_CONSTANT("PKCS7_TYPE", 0xffff,
                            CONST_CS | CONST_PERSISTENT);
+    REGISTER_LONG_CONSTANT("CADES_A", 0xdd,
+                           CONST_CS | CONST_PERSISTENT);
 
     REGISTER_LONG_CONSTANT("VERIFY_SIGNATURE_ONLY", 0,
                            CONST_CS | CONST_PERSISTENT);
