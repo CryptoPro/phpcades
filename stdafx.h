@@ -61,6 +61,8 @@
 #include <atlenc.h>
 #include <atlcrypt2.h>
 
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #ifndef NS_SHARED_PTR
 #define NS_SHARED_PTR boost
 #endif
