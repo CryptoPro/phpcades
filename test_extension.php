@@ -38,7 +38,7 @@ function test_CPSignedData_Sign_Verify()
         $content = "test content";
         $address = "http://testca.cryptopro.ru/tsp/tsp.srf";
         $cert = SetupCertificate(CURRENT_USER_STORE, "My", STORE_OPEN_READ_ONLY,
-                                 CERTIFICATE_FIND_SUBJECT_NAME, "Test", 0,
+                                 CERTIFICATE_FIND_SUBJECT_NAME, "test", 0,
                                  1);
 
         if(!$cert)
