@@ -13,16 +13,23 @@ PHP_METHOD(CPRawSignature, __construct) {
 }
 
 PHP_METHOD(CPRawSignature, VerifyHash) {
-    zval *zHashedData;
-    char *sVal;
+    zval* zHashedData;
+    char* sVal;
     size_t lVal;
-    zval *zCert;
+    zval* zCert;
     CCertContext Context;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() , "OsO", &zHashedData,
-                              hashed_data_ce, &sVal, &lVal, &zCert,
-                              cert_ce) == FAILURE)
-        RETURN_WITH_EXCEPTION(E_INVALIDARG);
+    zval* arg_zval = ZEND_CALL_ARG(execute_data, 2);
+    if (Z_TYPE_P(arg_zval) == IS_STRING) {
+        if (zend_parse_parameters(ZEND_NUM_ARGS(), "OsO", &zHashedData,
+            hashed_data_ce, &sVal, &lVal, &zCert, cert_ce) == FAILURE)
+            RETURN_WITH_EXCEPTION(E_INVALIDARG);
+    }
+    else {
+        if (zend_parse_parameters(ZEND_NUM_ARGS(), "OOs", &zHashedData,
+            hashed_data_ce, &zCert, cert_ce, &sVal, &lVal) == FAILURE)
+            RETURN_WITH_EXCEPTION(E_INVALIDARG);
+    }
 
     CAtlString Val(sVal, lVal);
     zend_object *zobj = Z_OBJ_P(getThis());

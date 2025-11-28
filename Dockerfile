@@ -31,6 +31,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN git clone https://github.com/CryptoPro/phpcades.git
 
+# for development purposes
+# COPY * /phpcades/
+
 WORKDIR /phpcades
 
 RUN php_dir=$(find /usr/include -name "php.h" 2>/dev/null | xargs dirname | xargs dirname) && \
