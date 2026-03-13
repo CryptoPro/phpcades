@@ -15,7 +15,7 @@ CFLAGS=$(PLATFORM_FLAGS)  -DUNIX -DHAVE_LIMITS_H $(ARCH_FLAGS) $(add_CPPFLAGS) -
 -DCPRO_CADES_VERSION_MAJOR=${CPRO_CADES_VERSION_MAJOR}\
 -DCPRO_CADES_VERSION_MINOR=${CPRO_CADES_VERSION_MINOR}\
 -DCPRO_CADES_VERSION_BUILD=${CPRO_CADES_VERSION_BUILD}
-LDFLAGS= $(ARCH_FLAGS) -L$(CSP_LIB) -lcppcades -lcapi10 -lcapi20 -lrdrsup $(add_ldflags) -g
+LDFLAGS= $(ARCH_FLAGS) -L$(CSP_LIB) -lcppcades -lcapi10 -lcapi20 -lrdrsup -lcplib $(add_ldflags) -g
 
 SOURCES=\
 	PHPCadesCPSigners.cpp PHPCadesCPSigner.cpp PHPCadesCPExtendedKeyUsage.cpp\
