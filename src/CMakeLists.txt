@@ -81,7 +81,6 @@ INCLUDE_DIRECTORIES( ${PHP_INCLUDE_DIR})
 INCLUDE_DIRECTORIES( ${phpcades_DIRS})
 
 ADD_LIBRARY(phpcades SHARED ${phpcades_LIB_SRCS})
-SET_TARGET_PROPERTIES(phpcades PROPERTIES PREFIX "")
 
 FIND_LIBRARY(FOUND_LIB_CPPCADES
     NAMES cppcades
@@ -92,7 +91,3 @@ FIND_LIBRARY(FOUND_LIB_CPLIB
     NAMES cplib
     HINTS /opt/cprocsp/lib/amd64 /opt/cprocsp/lib/ia32 /opt/cprocsp/lib/aarch64)
 TARGET_LINK_LIBRARIES(phpcades ${FOUND_LIB_CPLIB})
-
-# ADD_CUSTOM_COMMAND(TARGET phpcades
-#     POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:phpcades> ../../samples)

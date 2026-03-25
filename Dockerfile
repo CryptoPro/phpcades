@@ -8,6 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         git \
+        cmake \
         libxml2-dev \
         build-essential \
         libboost-all-dev \
@@ -33,21 +34,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN git clone https://github.com/CryptoPro/phpcades.git
 
 # for development purposes
-# COPY * /phpcades/
+# COPY . /phpcades
 
-WORKDIR /phpcades
+WORKDIR /phpcades/src
 
 RUN php_dir=$(find /usr/include -name "php.h" 2>/dev/null | xargs dirname | xargs dirname) && \
-    sed -i "s|^PHPDIR=.*|PHPDIR=$php_dir|" Makefile.unix
+    sed -i "s|/php|$php_dir|" CMakeLists.txt
 
-RUN eval `/opt/cprocsp/src/doxygen/CSP/../setenv.sh --64`; \
-    make -f Makefile.unix
+RUN mkdir build && cd build && \
+    cmake .. && \
+    make -j$(nproc)
 
 RUN php_exts=$(php -i | grep 'extension_dir' | cut -d' ' -f3 | xargs) && \
-    ln -s $(realpath libphpcades.so) $php_exts
+    ln -s $(realpath build/libphpcades.so) $php_exts
 
 RUN echo 'extension=libphpcades.so' >> $(php --ini | sed -n 's/^Loaded Configuration File: *//p')
 
-# docker run -it phpcades-build
+# docker run -it -w /phpcades/samples/ phpcades-build
 # /opt/cprocsp/bin/amd64/cryptcp -createcert -dn "CN=test" -provtype 80 -cont '\\.\HDIMAGE\test' -ca https://cryptopro.ru/certsrv
 # php test_extension.php
