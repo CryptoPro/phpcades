@@ -31,7 +31,6 @@ PROJECT(PHPModule LANGUAGES CXX)
             dllmain.cpp 
             PHPCadesVersion.cpp 
             PHPCadesSymmetricAlgorithm.cpp 
-            errormsg.cpp
         )
 FIND_PACKAGE( Boost REQUIRED )
 
