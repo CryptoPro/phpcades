@@ -76,6 +76,32 @@ PHP_METHOD(CPSigner, set_Options) {
     HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_Options(Opt));
 }
 
+PHP_METHOD(CPSigner, get_CheckCertificate) {
+    BOOL val;
+
+    zend_object *zobj = Z_OBJ_P(getThis());
+    signer_obj *obj =
+        (signer_obj *)((char *)zobj - XtOffsetOf(signer_obj, zobj));
+
+    HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->get_CheckCertificate(val));
+    RETURN_LONG(val);
+}
+
+PHP_METHOD(CPSigner, set_CheckCertificate) {
+    long lval;
+    BOOL val;
+    zend_object *zobj = Z_OBJ_P(getThis());
+    signer_obj *obj =
+        (signer_obj *)((char *)zobj - XtOffsetOf(signer_obj, zobj));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "l", &lval) == FAILURE)
+        RETURN_WITH_EXCEPTION(E_INVALIDARG);
+
+    val = (BOOL)lval;
+
+    HR_ERRORCHECK_RETURN(obj->m_pCppCadesImpl->put_CheckCertificate(val));
+}
+
 PHP_METHOD(CPSigner, get_AuthenticatedAttributes) {
     zend_object *zobj = Z_OBJ_P(getThis());
     signer_obj *obj =
@@ -266,6 +292,13 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigner_set_options, 0, 0, 1)
  ZEND_ARG_INFO(0, options)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigner_get_checkcertificate, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigner_set_checkcertificate, 0, 0, 1)
+ ZEND_ARG_INFO(0, checkcertificate)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(arginfo_cpsigner_get_authenticatedattributes, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
@@ -301,6 +334,8 @@ zend_function_entry CPSigner_methods[] = {
     PHP_ME(CPSigner, set_Certificate, arginfo_cpsigner_set_certificate, ZEND_ACC_PUBLIC)
     PHP_ME(CPSigner, get_Options, arginfo_cpsigner_get_options, ZEND_ACC_PUBLIC)
     PHP_ME(CPSigner, set_Options, arginfo_cpsigner_set_options, ZEND_ACC_PUBLIC)
+    PHP_ME(CPSigner, get_CheckCertificate, arginfo_cpsigner_get_checkcertificate, ZEND_ACC_PUBLIC)
+    PHP_ME(CPSigner, set_CheckCertificate, arginfo_cpsigner_set_checkcertificate, ZEND_ACC_PUBLIC)
     PHP_ME(CPSigner, get_AuthenticatedAttributes, arginfo_cpsigner_get_authenticatedattributes, ZEND_ACC_PUBLIC)
     PHP_ME(CPSigner, get_UnauthenticatedAttributes, arginfo_cpsigner_get_unauthenticatedattributes, ZEND_ACC_PUBLIC)
     PHP_ME(CPSigner, get_TSAAddress, arginfo_cpsigner_get_tsaaddress, ZEND_ACC_PUBLIC)
