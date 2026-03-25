@@ -18,6 +18,7 @@
 #define FACILITY_OCSPSRV                 0x213
 
 #ifdef UNIX
+#   include <cstdint>
 #   include <string>
 #   include <locale.h>
 #   include "CSP_WinDef.h"
