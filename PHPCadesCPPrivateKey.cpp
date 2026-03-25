@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "PHPCadesCPPrivateKey.h"
-#include "PHPCadesCPCardholderData.h"
 using namespace CryptoPro::PKI::CAdES;
 
 PHP_METHOD(CPPrivateKey, __construct) {

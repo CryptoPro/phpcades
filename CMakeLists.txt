@@ -22,7 +22,6 @@ PROJECT(PHPModule LANGUAGES CXX)
             PHPCadesCPRecipients.cpp 
             PHPCadesCPKeyUsage.cpp
             PHPCadesAbout.cpp 
-            PHPCadesCPCardholderData.cpp 
             PHPCadesCPCertificates.cpp 
             PHPCadesCPSignedXML.cpp
             PHPCadesCPHashedData.cpp 
