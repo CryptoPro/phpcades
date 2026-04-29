@@ -31,10 +31,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ./csp/cprocsp-pki-cades* && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/CryptoPro/phpcades.git
-
-# for development purposes
-# COPY . /phpcades
+COPY . /phpcades
 
 WORKDIR /phpcades/src
 
