@@ -15,19 +15,10 @@
     ```bash
     docker build -t phpcades-build .
     ```
-1. Запустить контейнер с собранным образом:
+1. Запустить пример в контейнере с собранным образом:
     ```
-    docker run -it -w /phpcades/samples/ phpcades-build
+    docker run phpcades-build php samples/test_extension.php
     ```
-1. Сгенерировать тестовый сертификат с привязкой к закрытому ключу:
-    ```
-    /opt/cprocsp/bin/amd64/cryptcp -createcert -dn "CN=test" -provtype 80 -cont '\\.\HDIMAGE\test' -ca https://cryptopro.ru/certsrv
-    ```
-1. Выполнить пример:
-    ```
-    php test_extension.php
-    ```
-
 
 ## Ubuntu
 
@@ -52,4 +43,13 @@
 1. Выполнить сборку:
     ```
     make
+    ```
+1. Создать в директории с расширениями символическую ссылку на собранную библиотеку libphpcades.so
+    ```
+    php_exts=$(php -i | grep '^extension_dir' | cut -d' ' -f3 | xargs) && \
+    ln -s $(realpath build/src/libphpcades.so) $php_exts
+    ```
+1. В файле php.ini добавить расширение
+    ```
+    extension=libphpcades.so
     ```
