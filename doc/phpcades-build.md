@@ -47,12 +47,9 @@
 1. Скачать исходный код phpcades
     ```
     git clone https://github.com/CryptoPro/phpcades.git
-    cd phpcades/src
+    cd phpcades
     ```
 1. Выполнить сборку:
     ```
-    mkdir build
-    cd build
-    cmake ..
-    make -j$(nproc)
+    make
     ```
