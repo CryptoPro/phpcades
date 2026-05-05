@@ -20,20 +20,16 @@ else()
 endif()
 
 execute_process(
-    COMMAND bash -c "if type dpkg > /dev/null 2>&1; then dpkg -l|grep cprocsp-pki-cades|awk ' { print $3 } '; else rpm -qa|grep cprocsp-pki-cades; fi|cut -d. -f1|cut -d- -f1"
-    OUTPUT_VARIABLE CPRO_CADES_VERSION_MAJOR
+    COMMAND bash -c "if type dpkg > /dev/null 2>&1; then dpkg -l | grep cprocsp-pki-cades | awk '{print $3}'; else rpm -qa | grep cprocsp-pki-cades; fi | cut -d- -f1"
+    OUTPUT_VARIABLE FULL_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-execute_process(
-    COMMAND bash -c "if type dpkg > /dev/null 2>&1; then dpkg -l|grep cprocsp-pki-cades|awk ' { print $3 } '; else rpm -qa|grep cprocsp-pki-cades; fi|cut -d. -f2|cut -d- -f1"
-    OUTPUT_VARIABLE CPRO_CADES_VERSION_MINOR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-execute_process(
-    COMMAND bash -c "if type dpkg > /dev/null 2>&1; then dpkg -l|grep cprocsp-pki-cades|awk ' { print $3 } '; else rpm -qa|grep cprocsp-pki-cades; fi|cut -d. -f3|cut -d- -f1"
-    OUTPUT_VARIABLE CPRO_CADES_VERSION_BUILD
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+
+string(REPLACE "." ";" VERSION_LIST "${FULL_VERSION}")
+
+list(GET VERSION_LIST 0 CPRO_CADES_VERSION_MAJOR)
+list(GET VERSION_LIST 1 CPRO_CADES_VERSION_MINOR)
+list(GET VERSION_LIST 2 CPRO_CADES_VERSION_BUILD)
 
 add_definitions(-DCPRO_CADES_VERSION_MAJOR=${CPRO_CADES_VERSION_MAJOR})
 add_definitions(-DCPRO_CADES_VERSION_MINOR=${CPRO_CADES_VERSION_MINOR})
