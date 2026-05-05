@@ -49,7 +49,6 @@
     git clone https://github.com/CryptoPro/phpcades.git
     cd phpcades/src
     ```
-1. Задать значение переменной PHP_INCLUDE_DIR в файле CMakeLists.txt (папка с php.h). 
 1. Выполнить сборку:
     ```
     mkdir build
