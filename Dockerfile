@@ -35,6 +35,12 @@ COPY . /phpcades
 
 WORKDIR /phpcades
 
+RUN (SCRIPTS_DIR=./tests/scripts && \
+    chmod +x ${SCRIPTS_DIR}/*.sh && \
+    ${SCRIPTS_DIR}/setup-root.sh && \
+    ${SCRIPTS_DIR}/setup-leaf.sh && \
+    ${SCRIPTS_DIR}/setup-crl.sh) > /dev/null 2>&1
+
 RUN make
 
 RUN php_exts=$(php -i | grep 'extension_dir' | cut -d' ' -f3 | xargs) && \
@@ -42,6 +48,4 @@ RUN php_exts=$(php -i | grep 'extension_dir' | cut -d' ' -f3 | xargs) && \
 
 RUN echo 'extension=libphpcades.so' >> $(php --ini | sed -n 's/^Loaded Configuration File: *//p')
 
-# docker run -it -w /phpcades/samples/ phpcades-build
-# /opt/cprocsp/bin/amd64/cryptcp -createcert -dn "CN=test" -provtype 80 -cont '\\.\HDIMAGE\test' -ca https://cryptopro.ru/certsrv
-# php test_extension.php
+# docker run phpcades-build php samples/test_extension.php
