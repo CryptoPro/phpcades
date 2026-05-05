@@ -1,7 +1,18 @@
 cmake_minimum_required(VERSION 3.5)
-set(PHP_INCLUDE_DIR "/php")
 set(CMAKE_CXX_STANDARD 11)
 project(PHPModule LANGUAGES CXX)
+
+execute_process(
+    COMMAND php-config --include-dir
+    OUTPUT_VARIABLE PHP_INCLUDE_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if(NOT PHP_INCLUDE_DIR)
+    message(FATAL_ERROR "php-config not found. Please install php-dev or php-devel package.")
+else()
+    message(STATUS "Found PHP include directory: ${PHP_INCLUDE_DIR}")
+endif()
 
 set(phpcades_LIB_SRCS
     PHPCadesCPSigners.cpp 

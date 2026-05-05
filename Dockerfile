@@ -35,9 +35,6 @@ COPY . /phpcades
 
 WORKDIR /phpcades/src
 
-RUN php_dir=$(find /usr/include -name "php.h" 2>/dev/null | xargs dirname | xargs dirname) && \
-    sed -i "s|/php|$php_dir|" CMakeLists.txt
-
 RUN mkdir build && cd build && \
     cmake .. && \
     make -j$(nproc)
