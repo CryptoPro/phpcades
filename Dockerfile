@@ -35,9 +35,7 @@ COPY . /phpcades
 
 WORKDIR /phpcades
 
-RUN mkdir build && cd build && \
-    cmake .. && \
-    make -j$(nproc)
+RUN make
 
 RUN php_exts=$(php -i | grep 'extension_dir' | cut -d' ' -f3 | xargs) && \
     ln -s $(realpath build/src/libphpcades.so) $php_exts
