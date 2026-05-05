@@ -115,7 +115,7 @@
         wchar_t buff[14];                                                                    \
         swprintf(buff, 14, L" (0x%08X)", err);                                               \
         message.Append(buff);                                                                \
-        zend_throw_exception(zend_exception_get_default(), CW2A(message, CP_UTF8), err);     \
+        zend_throw_exception(zend_ce_exception, CW2A(message, CP_UTF8), err);                \
         RETURN_FALSE;                                                                        \
     } while (0)
 
