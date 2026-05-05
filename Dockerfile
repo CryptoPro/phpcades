@@ -33,14 +33,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY . /phpcades
 
-WORKDIR /phpcades/src
+WORKDIR /phpcades
 
 RUN mkdir build && cd build && \
     cmake .. && \
     make -j$(nproc)
 
 RUN php_exts=$(php -i | grep 'extension_dir' | cut -d' ' -f3 | xargs) && \
-    ln -s $(realpath build/libphpcades.so) $php_exts
+    ln -s $(realpath build/src/libphpcades.so) $php_exts
 
 RUN echo 'extension=libphpcades.so' >> $(php --ini | sed -n 's/^Loaded Configuration File: *//p')
 
