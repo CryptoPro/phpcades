@@ -13,7 +13,7 @@ typedef struct _certstat_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers certstat_obj_handlers;
-extern zend_class_entry *certstat_ce;
+extern zend_class_entry* certstat_ce;
 
 // //функция освобождения памяти. используется при уничтожении объектов
 // void certstat_free_storage(void *object );

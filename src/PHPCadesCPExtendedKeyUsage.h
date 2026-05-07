@@ -13,7 +13,7 @@ typedef struct _exku_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers exku_obj_handlers;
-extern zend_class_entry *exku_ce;
+extern zend_class_entry* exku_ce;
 
 //функция освобождения памяти. используется при уничтожении объектов
 // void exku_free_storage(void *object );

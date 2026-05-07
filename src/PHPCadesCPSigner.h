@@ -9,7 +9,7 @@ typedef struct _signer_obj {
 } signer_obj;
 
 extern zend_object_handlers signer_obj_handlers;
-extern zend_class_entry *signer_ce;
+extern zend_class_entry* signer_ce;
 
 // void sig_free_storage(void *object );
 // zend_object* sig_create_handler(zend_class_entry *type );

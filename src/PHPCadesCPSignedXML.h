@@ -12,7 +12,7 @@ typedef struct _signed_xml_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers signed_xml_obj_handlers;
-extern zend_class_entry *signed_xml_ce;
+extern zend_class_entry* signed_xml_ce;
 
 // void signed_xml_free_storage(void *object );
 // zend_object_value signed_xml_create_handler(zend_class_entry *type );

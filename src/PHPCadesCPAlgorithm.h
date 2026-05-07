@@ -6,13 +6,13 @@
 //объявление структуры, которая свяжет объект оборачиваемого класса
 //с объектом php
 typedef struct _algo_obj {
-    CryptoPro::PKI::CAdES::CPPCadesCPAlgorithmObject *m_pCppCadesImpl;
+    CryptoPro::PKI::CAdES::CPPCadesCPAlgorithmObject* m_pCppCadesImpl;
     zend_object zobj; /* MUST be the last element */
 } algo_obj;
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers algo_obj_handlers;
-extern zend_class_entry *algo_ce;
+extern zend_class_entry* algo_ce;
 
 // //функция освобождения памяти. используется при уничтожении объектов
 // void algo_free_storage(void *object );

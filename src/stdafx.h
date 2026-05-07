@@ -132,12 +132,10 @@
     while (0)                                 \
     __pragma(warning(pop))
 
-static const ATL::CAtlStringW GetErrorMessage(HRESULT hr, DWORD dwLangId)
-{
+static const ATL::CAtlStringW GetErrorMessage(HRESULT hr, DWORD dwLangId) {
     UNUSED(dwLangId);
     ATL::CAtlStringW ret;
-    switch (hr)
-    {
+    switch (hr) {
     case TSPCLI_ERROR_HTTP:
     case OCSPCLI_ERROR_HTTP:
         ret = L"HTTP error occurred while sending request.";

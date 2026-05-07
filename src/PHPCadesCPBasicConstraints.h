@@ -13,7 +13,7 @@ typedef struct _basic_constr_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers basic_constr_obj_handlers;
-extern zend_class_entry *basic_constr_ce;
+extern zend_class_entry* basic_constr_ce;
 
 //функция освобождения памяти. используется при уничтожении объектов
 // void basic_constr_free_storage(void *object );

@@ -12,7 +12,7 @@ typedef struct hashed_data_obj {
 } hashed_data_obj;
 
 //хэндлеры для обработки объектов оборачиваемого класса
-extern zend_class_entry *hashed_data_ce;
+extern zend_class_entry* hashed_data_ce;
 extern zend_object_handlers hashed_data_obj_handlers;
 
 // void hashed_data_free_storage(void *object );

@@ -11,7 +11,7 @@ typedef struct _signers_obj {
 } signers_obj;
 
 //хэндлеры для обработки объектов оборачиваемого класса
-extern zend_class_entry *signers_ce;
+extern zend_class_entry* signers_ce;
 extern zend_object_handlers signers_obj_handlers;
 
 // void signers_free_storage(void *object );

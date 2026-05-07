@@ -12,7 +12,7 @@ typedef struct _ku_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers ku_obj_handlers;
-extern zend_class_entry *ku_ce;
+extern zend_class_entry* ku_ce;
 
 //функция освобождения памяти. используется при уничтожении объектов
 // void ku_free_storage(void *object );

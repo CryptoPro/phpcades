@@ -13,7 +13,7 @@ typedef struct _private_key_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers private_key_obj_handlers;
-extern zend_class_entry *private_key_ce;
+extern zend_class_entry* private_key_ce;
 
 // //функция освобождения памяти. используется при уничтожении объектов
 // void private_key_free_storage(void *object );

@@ -11,7 +11,7 @@ typedef struct _certs_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers certs_obj_handlers;
-extern zend_class_entry *certs_ce;
+extern zend_class_entry* certs_ce;
 
 //функция освобождения памяти. используется при уничтожении объектов
 // void certs_free_storage(void *object );

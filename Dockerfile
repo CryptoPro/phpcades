@@ -7,13 +7,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        git \
-        cmake \
-        libxml2-dev \
-        build-essential \
-        libboost-all-dev \
-        ca-certificates \
-        php-dev && \
+    git \
+    cmake \
+    libxml2-dev \
+    build-essential \
+    libboost-all-dev \
+    ca-certificates \
+    php-dev && \
     rm -rf /var/lib/apt/lists/*
 
 RUN update-ca-certificates
@@ -25,10 +25,10 @@ RUN chmod +x ./csp/install*.sh
 RUN ./csp/install.sh
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        ./csp/cprocsp-rdr-gui-gtk* \
-        ./csp/lsb-cprocsp-devel* \
-        ./csp/cprocsp-legacy* \
-        ./csp/cprocsp-pki-cades* && \
+    ./csp/cprocsp-rdr-gui-gtk* \
+    ./csp/lsb-cprocsp-devel* \
+    ./csp/cprocsp-legacy* \
+    ./csp/cprocsp-pki-cades* && \
     rm -rf /var/lib/apt/lists/*
 
 COPY . /phpcades

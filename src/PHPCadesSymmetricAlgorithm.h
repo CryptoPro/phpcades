@@ -13,7 +13,7 @@ typedef struct _symmetric_algorithm_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers symmetric_algorithm_obj_handlers;
-extern zend_class_entry *symmetric_algorithm_ce;
+extern zend_class_entry* symmetric_algorithm_ce;
 
 //функция освобождения памяти. используется при уничтожении объектов
 // void symmetric_algorithm_free_storage(void *object );

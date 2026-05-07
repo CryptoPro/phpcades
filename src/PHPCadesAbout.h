@@ -15,7 +15,7 @@ typedef struct _about_obj {
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers about_obj_handlers;
 
-extern zend_class_entry *about_ce;
+extern zend_class_entry* about_ce;
 
 //функция освобождения памяти. используется при уничтожении объектов
 // void about_free_storage(void *object );

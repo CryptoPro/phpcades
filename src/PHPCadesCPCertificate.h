@@ -12,7 +12,7 @@ typedef struct _certificate_obj {
 } certificate_obj;
 
 extern zend_object_handlers certificate_obj_handlers;
-extern zend_class_entry *cert_ce;
+extern zend_class_entry* cert_ce;
 
 // zend_object* cert_create_handler(zend_class_entry *ce );
 //функция инициализации класса. должна включаться в

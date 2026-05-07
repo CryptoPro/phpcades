@@ -21,8 +21,7 @@ try {
     $rsverify->VerifyHash($hd, $sig, $cert);
     $rsverify->VerifyHash($hd, $cert, $sig);
     printf("Verified successfully\n");
-}
-catch(Exception $e) {
+} catch(Exception $e) {
     printf("Failed: %s\n", $e->getMessage());
 }
 ?>

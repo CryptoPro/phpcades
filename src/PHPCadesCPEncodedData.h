@@ -13,7 +13,7 @@ typedef struct _encoded_data_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers encoded_data_obj_handlers;
-extern zend_class_entry *encoded_data_ce;
+extern zend_class_entry* encoded_data_ce;
 
 //функция освобождения памяти. используется при уничтожении объектов
 // void encoded_data_free_storage(void *object );

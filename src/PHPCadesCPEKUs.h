@@ -7,11 +7,11 @@
 //с объектом php
 typedef struct _eku_col_obj {
     NS_SHARED_PTR::shared_ptr<CryptoPro::PKI::CAdES::CPPCadesCPEKUsObject> m_pCppCadesImpl;
-    zend_class_entry *type;
+    zend_class_entry* type;
     zend_object zobj; /* MUST be the last element */
 } eku_col_obj;
 
-extern zend_class_entry *eku_col_ce;
+extern zend_class_entry* eku_col_ce;
 extern zend_object_handlers eku_col_handlers;
 
 // void eku_col_free_storage(void *object );

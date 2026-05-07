@@ -12,7 +12,7 @@ typedef struct _raw_sig_obj {
 } raw_sig_obj;
 
 //хэндлеры для обработки объектов оборачиваемого класса
-extern zend_class_entry *raw_sig_ce;
+extern zend_class_entry* raw_sig_ce;
 extern zend_object_handlers raw_sig_obj_handlers;
 
 // void raw_sig_free_storage(void *object );

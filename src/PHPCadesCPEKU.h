@@ -12,7 +12,7 @@ typedef struct _eku_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers eku_obj_handlers;
-extern zend_class_entry *eku_ce;
+extern zend_class_entry* eku_ce;
 
 // void eku_free_storage(void *object );
 // zend_object_value item_create_handler(zend_class_entry *type );

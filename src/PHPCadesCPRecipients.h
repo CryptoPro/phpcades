@@ -12,7 +12,7 @@ typedef struct _recipients_obj {
 } recipients_obj;
 
 //хэндлеры для обработки объектов оборачиваемого класса
-extern zend_class_entry *recipients_ce;
+extern zend_class_entry* recipients_ce;
 extern zend_object_handlers recipients_obj_handlers;
 
 // void recipients_free_storage(void *object );

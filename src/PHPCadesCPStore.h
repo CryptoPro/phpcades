@@ -12,7 +12,7 @@ typedef struct _store_obj {
 
 //хэндлеры для обработки объектов оборачиваемого класса
 extern zend_object_handlers store_obj_handlers;
-extern zend_class_entry *store_ce;
+extern zend_class_entry* store_ce;
 
 // //функция освобождения памяти. используется при уничтожении объектов
 // void store_free_storage(void *object );

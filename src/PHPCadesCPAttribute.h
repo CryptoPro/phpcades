@@ -12,7 +12,7 @@ typedef struct _attribute_obj {
 } attribute_obj;
 
 extern zend_object_handlers attribute_obj_handlers;
-extern zend_class_entry *attribute_ce;
+extern zend_class_entry* attribute_ce;
 
 // // void attr_free_storage(void *object );
 // zend_object_value attr_create_handler(zend_class_entry *type );
