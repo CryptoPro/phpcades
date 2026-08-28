@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.18)
 project(phpcades LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -37,6 +37,6 @@ add_definitions(-DCPRO_CADES_VERSION_BUILD=${CPRO_CADES_VERSION_BUILD})
 
 message(STATUS "cprocsp-pki-cades: ${CPRO_CADES_VERSION_MAJOR}.${CPRO_CADES_VERSION_MINOR}.${CPRO_CADES_VERSION_BUILD}")
 
-find_package(Boost REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 
 add_subdirectory(src)
