@@ -96,11 +96,15 @@ PHP_METHOD(CPAttribute, get_Value) {
     else {
         FILETIME fTime;
         DWORD fTimeSize = sizeof(FILETIME);
-        CryptStringToBinary(reinterpret_cast<TCHAR*>(val.pbData()), len,
-            CRYPT_STRING_BASE64, str, &len, NULL, NULL);
-        CryptDecodeObject(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
+        if (!CryptStringToBinary(reinterpret_cast<TCHAR*>(val.pbData()), len,
+            CRYPT_STRING_BASE64, str, &len, NULL, NULL)) {
+            RETURN_WITH_EXCEPTION(E_INVALIDARG);
+            }
+        if (!CryptDecodeObject(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
             (LPCSTR)szOID_RSA_signingTime, str, len, 0, &fTime,
-            &fTimeSize);
+            &fTimeSize)) {
+            RETURN_WITH_EXCEPTION(E_INVALIDARG);
+            }
         CryptoPro::CDateTime Time(fTime);
         CryptoPro::CStringProxy prstr = Time.tostring();
         zend_string* tstr = zend_string_init(const_cast<char*>(prstr.c_str()), strlen(prstr.c_str()), 0);
