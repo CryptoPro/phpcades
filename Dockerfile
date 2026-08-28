@@ -39,6 +39,6 @@ RUN make
 RUN php_exts=$(php -i | grep 'extension_dir' | cut -d' ' -f3 | xargs) && \
     ln -s $(realpath build/src/libphpcades.so) $php_exts
 
-RUN echo 'extension=libphpcades.so' >> $(php --ini | sed -n 's/^Loaded Configuration File: *//p')
+RUN echo 'extension=libphpcades.so' >> $(php --ini | sed -n 's/^Loaded Configuration File: *//p' | tr -d '"')
 
 # docker run phpcades-build php samples/test_extension.php
