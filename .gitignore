@@ -68,5 +68,6 @@ Testing/
 .cache/
 
 linux-*/
+csp/
 *.deb
 *.rpm

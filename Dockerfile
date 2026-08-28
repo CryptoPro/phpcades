@@ -1,4 +1,4 @@
-# cp -r ~/linux-amd64_deb/ .
+# cp -r ~/csp/ .
 # docker build -t phpcades-build .
 
 FROM ubuntu:latest
@@ -18,7 +18,7 @@ RUN apt-get update && \
 
 RUN update-ca-certificates
 
-COPY linux-amd64_deb csp
+COPY csp csp
 
 RUN chmod +x ./csp/install*.sh
 
